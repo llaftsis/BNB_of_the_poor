@@ -1,11 +1,9 @@
-import React from 'react';
-
 function Header() {
   return (
-    <header>
+    <header className="header">
       <h1>Αναζήτηση Διαμερισμάτων</h1>
       <nav>
-        <ul>
+        <ul className="nav-list">
           <li>Αρχική</li>
           <li>Σχετικά με Εμάς</li>
           <li>Επικοινωνία</li>

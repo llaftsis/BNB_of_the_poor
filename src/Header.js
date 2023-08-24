@@ -1,3 +1,6 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
 function Header() {
   return (
     <header className="header">
@@ -7,7 +10,7 @@ function Header() {
           <li>Αρχική</li>
           <li>Σχετικά με Εμάς</li>
           <li>Επικοινωνία</li>
-          <li>Σύνδεση/Εγγραφή</li>
+          <li><Link to="/login">Συνδεση/Εγγραφη</Link></li>
         </ul>
       </nav>
     </header>

@@ -63,6 +63,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
+1) Go to react application folder
+2) 'npm start'
+3) Start MySQL server from MySQLWorkBench
+4) New window is application folder
+5) node server_api.js and leave it open
+
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
 ### `npm run build` fails to minify

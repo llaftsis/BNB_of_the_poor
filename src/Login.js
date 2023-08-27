@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import RegistrationContext from './RegistrationContext';
+import RegistrationWindow from './RegistrationWindow';
+import AuthContext from './AuthContext';
+import { useNavigate } from 'react-router-dom'; // Make sure you've installed react-router-dom
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { showingRegistration, setShowingRegistration } = useContext(RegistrationContext);
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Call the backend API to authenticate the user
-    const response = await fetch('http://localhost:4000/api/login', {
+    const response = await fetch('http://localhost:5000/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ username, password }),
     });
-
+  
     const data = await response.json();
     if (data.success) {
-      // Handle successful login, e.g., redirect to dashboard or show a welcome message
+      login({ username }); // Update the user context
+      navigate('/');
     } else {
-      // Handle login error, e.g., show an error message to the user
+      alert(data.message);
     }
   };
+ 
+  
 
   return (
     <div>
@@ -44,6 +54,8 @@ function Login() {
         </label>
         <button type="submit">Login</button>
       </form>
+      <button onClick={() => setShowingRegistration(true)}>Εγγραφή</button>
+      {showingRegistration && <RegistrationWindow />}
     </div>
   );
 }

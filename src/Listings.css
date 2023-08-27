@@ -1,0 +1,73 @@
+.carousel-container {
+    overflow-x: scroll;
+    white-space: nowrap;
+    width: 100%;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); 
+    scroll-snap-type: x mandatory;
+  }
+  
+  .carousel-content {
+    display: inline-flex;
+    padding: 20px 0;
+  }
+  
+ .listing {
+  display: inline-block;
+  width: 250px;               /* Set a fixed width for each listing */
+  height: 350px;              /* Set a fixed height for each listing */
+  margin-right: 16px;
+  border: 1px solid #eee;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  overflow: hidden;           /* Ensures content doesn't overflow the fixed dimensions */
+  white-space: normal;        /* Allows content to wrap inside the listing */
+  position: relative;         /* Allows for absolute positioning inside the listing */
+}
+
+.listing img {
+  width: 100%;                /* Ensures image takes full width of the listing */
+  height: 150px;              /* Fixed height for image */
+  object-fit: cover;          /* Ensures images are resized correctly */
+  border-radius: 4px;         /* Optional rounded corners */
+  margin-bottom: 8px;
+}
+
+.listing h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  overflow: hidden;           /* Truncate text if too long */
+  text-overflow: ellipsis;    /* Show ellipsis if text is truncated */
+  white-space: nowrap;        /* Prevent wrapping to keep truncation consistent */
+}
+
+.listing p {
+  font-size: 14px;
+  overflow: hidden;           /* Truncate text if too long */
+  text-overflow: ellipsis;    /* Show ellipsis if text is truncated */
+  white-space: nowrap;        /* Prevent wrapping to keep truncation consistent */
+}
+
+/* If you want a 'read more' or 'details' button at the bottom of each listing */
+.listing button {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  border: none;
+  background-color: #FF5A5F;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+  
+  /* Last listing doesn't have right margin */
+  .listing:last-child {
+    margin-right: 0;
+  }
+  
+  
+  

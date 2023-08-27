@@ -8,6 +8,9 @@ import Footer from './Footer';
 import Login from './Login';
 import RegistrationContext from './RegistrationContext';
 import AuthProvider from './AuthProvider';
+import AboutUs from './AboutUs';
+import ContactPage from './ContactPage';
+
 
 function App() {
   const [showingRegistration, setShowingRegistration] = useState(false);
@@ -15,16 +18,18 @@ function App() {
   return (
     <AuthProvider>
       <RegistrationContext.Provider value={{ showingRegistration, setShowingRegistration }}>
-        <Router>
+        
           <div className="App">
             <Header />
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<SearchForm />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/contact" element={<ContactPage />} />
             </Routes>
             <Footer />
           </div>
-        </Router>
+        
       </RegistrationContext.Provider>
     </AuthProvider>
   );

@@ -12,9 +12,9 @@ function Header() {
       <h1>Αναζήτηση Διαμερισμάτων</h1>
       <nav>
         <ul className="nav-list">
-          <li>Αρχική</li>
-          <li>Σχετικά με Εμάς</li>
-          <li>Επικοινωνία</li>
+          <li><Link to="/">Αρχική</Link></li>
+          <li><Link to="/about">Σχετικά με Εμάς</Link></li>
+          <li><Link to="/contact">Επικοινωνία</Link></li>
           {user ? (
             <>
               <li>{user.username}</li>

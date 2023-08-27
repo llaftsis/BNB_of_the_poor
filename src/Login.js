@@ -34,8 +34,8 @@ function Login() {
   
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
         <label>
           Username:
           <input
@@ -52,7 +52,7 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button type="submit">Login</button>
+        <button type="submit" className="login-button">Login</button>
       </form>
       <button onClick={() => setShowingRegistration(true)}>Εγγραφή</button>
       {showingRegistration && <RegistrationWindow />}

@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f2f2f2;
   color: #333;
-}
+} 
 
 /*header {
   background-color: #2980b9;
@@ -108,4 +108,105 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #3276b1;
+}
+
+input[type="date"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  margin-right: 10px;
+}
+
+input[type="date"]:focus {
+  border-color: #007bff;
+}
+
+/* Adjust the width of the inputs if needed */
+#check-in-date,
+#check-out-date {
+  width: 150px; /* Adjust this value as needed */
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.page-number {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.page-number:hover {
+  background-color: #f5f5f5;
+}
+
+.page-number.active {
+  background-color: #FF5A5F;
+  color: #fff;
+}
+
+.footer {
+  background-color: #f0f0f0;
+  padding: 20px;
+  text-align: center;
+}
+/* Login.css */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content vertically */
+}
+
+.login-form {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  width: 300px;
+  text-align: left;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 3px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.login-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.registration-button {
+  margin-top: 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.registration-button:hover, .login-button:hover {
+  opacity: 0.9;
 }

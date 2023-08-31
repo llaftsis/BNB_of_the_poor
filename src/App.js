@@ -11,6 +11,7 @@ import AuthProvider from './AuthProvider';
 import AboutUs from './AboutUs';
 import ContactPage from './ContactPage';
 import AdminDashboard from './AdminDashboard';
+import UserDetails from './UserDetails';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/user-details/:id" element={<UserDetails />} />
             </Routes>
             <Footer />
           </div>

@@ -81,7 +81,39 @@ app.get('/api/export-data', (req, res) => {
   });
 });
 
+// Fetch user details by ID
+app.get('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
 
+  connection.query('SELECT * FROM Users WHERE id = ?', [userId], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(results[0]);
+  });
+});
+
+// Approve user as Host
+app.post('/api/users/:id/approve-host', (req, res) => {
+  const userId = req.params.id;
+
+  connection.query('UPDATE Users SET role = ? WHERE id = ?', ['Οικοδεσπότης', userId], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ success: true, message: 'User approved as host' });
+  });
+});
 
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);

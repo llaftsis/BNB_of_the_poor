@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function AdminDashboard() {
     const [users, setUsers] = useState([]);
@@ -55,11 +56,13 @@ function AdminDashboard() {
             <h2>Διαχείριση Χρηστών</h2>
             <ul>
                 {users.map(user => (
-                    <li key={user.id}>{user.username}</li>
+                    <li key={user.id}>
+                    <Link to={`/user-details/${user.id}`}>{user.username}</Link></li>
                 ))}
             </ul>
             <button onClick={() => handleExportData('json')}>Εξαγωγή σε JSON</button>
             <button onClick={() => handleExportData('xml')}>Εξαγωγή σε XML</button>
+
         </div>
     );
 

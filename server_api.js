@@ -23,13 +23,13 @@ app.get('/api/apartments', (req, res) => {
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
 
-  connection.query('SELECT * FROM Users WHERE username = ?', [username], async (error, results) => {
+  connection.query(`SELECT username, password, role FROM Users WHERE username = ?`, [username], async (error, results) => {
     if (error) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
     if (results.length > 0 && await bcrypt.compare(password, results[0].password)) {
-      res.json({ success: true, message: 'Login successful' });
+      res.json({ success: true, role: results[0].role, message: 'Login successful' });
     } else {
       res.json({ success: false, message: 'Invalid username or password' });
     }

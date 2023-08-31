@@ -25,13 +25,18 @@ function Login() {
     const data = await response.json();
     if (data.success) {
       login({ username }); // Update the user context
-      navigate('/');
+      console.log("Server Response:", data);
+      if (data.role === 'Διαχειριστής') {
+        navigate('/admin-dashboard'); // Οδηγεί τον διαχειριστή στη σελίδα διαχείρισης
+        console.log("Server Response:", data);  // <-- Προσθέστε αυτή τη γραμμή
+      } else {
+        navigate('/'); // Οδηγεί τους άλλους χρήστες στην αρχική σελίδα
+        }
     } else {
-      alert(data.message);
-    }
+    alert(data.message);
+    } 
   };
  
-  
 
   return (
     <div className="login-container">

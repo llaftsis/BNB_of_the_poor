@@ -10,6 +10,7 @@ import RegistrationContext from './RegistrationContext';
 import AuthProvider from './AuthProvider';
 import AboutUs from './AboutUs';
 import ContactPage from './ContactPage';
+import AdminDashboard from './AdminDashboard';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/" element={<SearchForm />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
             </Routes>
             <Footer />
           </div>

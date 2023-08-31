@@ -6,7 +6,8 @@ const connection = mysql.createConnection({
   user: 'root',
   password: 'admin',
   database: 'ApartmentSearch',
-  port: 3306
+  port: 3306,
+  multipleStatements: true
 });
 
 // Connect to the database

@@ -60,6 +60,29 @@ app.post('/api/register', async (req, res) => {
   console.log("Registration completed.");
 });
 
+// Fetch all users
+app.get('/api/users', (req, res) => {
+  connection.query('SELECT * FROM Users', (error, results) => {
+      if (error) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.json(results);
+  });
+});
+
+app.get('/api/export-data', (req, res) => {
+  connection.query('SELECT * FROM Apartments; SELECT * FROM Users', (error, results) => {
+      if (error) {
+          console.error("Database Error:", error);  // <-- Log the specific error for debugging
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      const [apartments, users] = results;
+      res.json({ apartments, users });
+  });
+});
+
+
+
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);
 });

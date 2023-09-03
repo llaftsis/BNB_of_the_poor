@@ -40,15 +40,18 @@ app.post('/api/login', (req, res) => {
 app.post('/api/register', async (req, res) => {
   console.log("Received registration request:", req.body);
   const { username, password, email, firstName, lastName, phone, role } = req.body;
-
+  let isApproved = true;
+  if (role === 'Οικοδεσπότης') {
+      isApproved = false;
+  }
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
  if (phone.length !== 10) {
     return res.status(400).json({ error: 'Το τηλέφωνο πρέπει να έχει ακριβώς 10 ψηφία' });
   }
   connection.query(
-    'INSERT INTO Users (username, password, email, firstName, lastName, phone, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [username, hashedPassword, email, firstName, lastName, phone, role],
+    'INSERT INTO Users (username, password, email, firstName, lastName, phone, isApproved, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [username, hashedPassword, email, firstName, lastName, phone, isApproved, role, ],
     
     (error, results) => {
       if (error) {
@@ -102,7 +105,7 @@ app.get('/api/users/:id', (req, res) => {
 app.post('/api/users/:id/approve-host', (req, res) => {
   const userId = req.params.id;
 
-  connection.query('UPDATE Users SET role = ? WHERE id = ?', ['Οικοδεσπότης', userId], (error, results) => {
+  connection.query('UPDATE Users SET role = ?, isApproved = ? WHERE id = ?', ['Οικοδεσπότης', true, userId], (error, results) => {
     if (error) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }

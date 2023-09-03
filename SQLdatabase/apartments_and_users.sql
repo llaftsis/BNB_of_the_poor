@@ -17,6 +17,7 @@ CREATE TABLE Users (
     firstName VARCHAR(255) NOT NULL,
     lastName VARCHAR(255) NOT NULL,
     phone VARCHAR(15) NOT NULL,
+    isApproved BOOLEAN DEFAULT TRUE,
     role ENUM('Οικοδεσπότης', 'Ενοικιαστής', 'Διαχειριστής') NOT NULL
 );
 

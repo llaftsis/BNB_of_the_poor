@@ -50,9 +50,9 @@ function UserDetails() {
             <p>Email: {user.email}</p>
             <p>Αριθμός: {user.phone}</p>
             <p>Ρόλος: {user.role}</p>
-            { user.role === "Οικοδεσπότης" && 
-            <button onClick={handleApproval}>Έγκριση ως Οικοδεσπότης</button> 
-        }
+            {!user.isApproved && (
+                <button onClick={handleApproval}>Εγκριση ως οικοδεσπότης</button>
+            )}
         </div>
     );
 }

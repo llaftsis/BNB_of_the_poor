@@ -24,7 +24,7 @@ function Login() {
   
     const data = await response.json();
     if (data.success) {
-      login({ username }); // Update the user context
+      login(data.user); // Update the user context
       console.log("Server Response:", data);
       if (data.role === 'Διαχειριστής') {
         navigate('/admin-dashboard'); // Οδηγεί τον διαχειριστή στη σελίδα διαχείρισης

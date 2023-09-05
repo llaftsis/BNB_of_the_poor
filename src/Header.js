@@ -16,16 +16,17 @@ function Header() {
           <li><Link to="/about">Σχετικά με Εμάς</Link></li>
           <li><Link to="/contact">Επικοινωνία</Link></li>
           {user ? (
-            <>
-              <li>{user.username}</li>
-              <li onClick={() => {
-                 logout();
-                 navigate('/');
-              }}>Logout</li>
-            </>
-          ) : (
-           <li><Link to="/login">Σύνδεση/Εγγραφή</Link></li>
-          )}
+  <>
+    <li><Link to={`/users/${user.id}`}>{user.username}</Link></li>
+    <li onClick={() => {
+       logout();
+       navigate('/');
+    }}>Logout</li>
+  </>
+) : (
+  <li><Link to="/login">Σύνδεση/Εγγραφή</Link></li>
+)}
+
         </ul>
       </nav>
     </header>

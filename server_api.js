@@ -23,13 +23,18 @@ app.get('/api/apartments', (req, res) => {
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
 
-  connection.query(`SELECT username, password, role FROM Users WHERE username = ?`, [username], async (error, results) => {
+  connection.query(`SELECT id, username, password, role FROM Users WHERE username = ?`, [username], async (error, results) => {
     if (error) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
     if (results.length > 0 && await bcrypt.compare(password, results[0].password)) {
-      res.json({ success: true, role: results[0].role, message: 'Login successful' });
+      const user = {
+        id: results[0].id,  // <-- Include the user's ID
+        username: results[0].username,
+        role: results[0].role
+      };
+      res.json({ success: true, user, message: 'Login successful' });  // <-- Return the user object
     } else {
       res.json({ success: false, message: 'Invalid username or password' });
     }
@@ -118,6 +123,67 @@ app.post('/api/users/:id/approve-host', (req, res) => {
   });
 });
 
+// Update user details by ID
+app.put('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const { username, email, firstName, lastName, phone } = req.body;
+
+  connection.query(
+      'UPDATE Users SET username = ?, email = ?, firstName = ?, lastName = ?, phone = ? WHERE id = ?',
+      [username, email, firstName, lastName, phone, userId],
+      (error, results) => {
+          if (error) {
+              return res.status(500).json({ error: 'Internal Server Error' });
+          }
+          if (results.affectedRows === 0) {
+              return res.status(404).json({ error: 'User not found' });
+          }
+          res.json({ success: true, message: 'User details updated' });
+      }
+  );
+});
+
+// Handle password change
+app.post('/api/change-password', async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  // Fetch the current hashed password for the user from the database
+  connection.query('SELECT password FROM Users WHERE id = ?', [userId], async (error, results) => {
+      if (error) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      if (results.length === 0) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      const hashedPassword = results[0].password;
+
+      // Check if the current password matches the one in the database
+      const isMatch = await bcrypt.compare(currentPassword, hashedPassword);
+      
+      if (!isMatch) {
+          return res.status(400).json({ message: 'Current password is incorrect' });
+      }
+
+      // Ensure the new password is different from the old one
+      if (await bcrypt.compare(newPassword, hashedPassword)) {
+          return res.status(400).json({ message: 'New password cannot be the same as the old one' });
+      }
+
+      // Hash the new password and update it in the database
+      const newHashedPassword = await bcrypt.hash(newPassword, 10);
+      connection.query('UPDATE Users SET password = ? WHERE id = ?', [newHashedPassword, userId], (updateError) => {
+          if (updateError) {
+              return res.status(500).json({ error: 'Internal Server Error' });
+          }
+
+          res.json({ success: true, message: 'Password updated successfully' });
+      });
+  });
+});
+
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);
 });
+

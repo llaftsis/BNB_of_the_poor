@@ -1,6 +1,7 @@
 // App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+//import { AuthProvider } from './AuthProvider';
 import './style.css';
 import Header from './Header';
 import SearchForm from './SearchForm';
@@ -12,7 +13,7 @@ import AboutUs from './AboutUs';
 import ContactPage from './ContactPage';
 import AdminDashboard from './AdminDashboard';
 import UserDetails from './UserDetails';
-
+import UserProfile from './UserProfile';
 
 function App() {
   const [showingRegistration, setShowingRegistration] = useState(false);
@@ -30,6 +31,7 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/user-details/:id" element={<UserDetails />} />
+              <Route path="/users/:id" element={<UserProfile />} />
             </Routes>
             <Footer />
           </div>

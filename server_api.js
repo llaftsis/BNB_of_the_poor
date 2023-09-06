@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 5000;
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
 
 // Parse JSON requests
 app.use(express.json());
@@ -183,7 +185,15 @@ app.post('/api/change-password', async (req, res) => {
   });
 });
 
-app.listen(5000, '127.0.0.1', () => {
-  console.log(`Server is running on http://127.0.0.1:5000`);
-});
+// app.listen(5000, '127.0.0.1', () => {
+//   console.log(`Server is running on http://127.0.0.1:5000`);
+// });
 
+const privateKey = fs.readFileSync('server.key', 'utf8');
+const certificate = fs.readFileSync('server.crt', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(5000, '127.0.0.1', () => {
+    console.log(`HTTPS Server is running on https://127.0.0.1:5000`);
+});

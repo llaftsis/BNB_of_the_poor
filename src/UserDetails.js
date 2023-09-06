@@ -7,7 +7,7 @@ function UserDetails() {
 
     useEffect(() => {
         // Fetch user details from the server
-        fetch(`http://localhost:5000/api/users/${id}`)
+        fetch(`https://localhost:5000/api/users/${id}`)
             .then(response => response.json())
             .then(data => setUser(data))
             .catch(error => console.error('Error fetching user details:', error));
@@ -15,7 +15,7 @@ function UserDetails() {
 
     const handleApproval = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/users/${id}/approve-host`, {
+            const response = await fetch(`https://localhost:5000/api/users/${id}/approve-host`, {
                 method: 'POST'
             });
             const data = await response.json();
@@ -23,7 +23,7 @@ function UserDetails() {
             if (data.success) {
                 alert('Ο χρήστης εγκρίθηκε ως οικοδεσπότης!');
                 // Φόρτωση ξανά των στοιχείων του χρήστη
-                fetch(`http://localhost:5000/api/users/${id}`)
+                fetch(`https://localhost:5000/api/users/${id}`)
                     .then(response => response.json())
                     .then(data => setUser(data))
                     .catch(error => console.error('Error fetching user details after approval:', error));

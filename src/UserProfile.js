@@ -20,7 +20,7 @@ function UserProfile() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/users/${id}`)
+        fetch(`https://localhost:5000/api/users/${id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch user');
@@ -46,7 +46,7 @@ function UserProfile() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
+            const response = await fetch(`https://localhost:5000/api/users/${user.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(user)
@@ -74,7 +74,7 @@ function UserProfile() {
         }
 
         // Send the data to the backend
-        const response = await fetch('http://localhost:5000/api/change-password', {
+        const response = await fetch('https://localhost:5000/api/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ function AdminDashboard() {
 
     useEffect(() => {
         // Fetch users from the server.
-        fetch('https://localhost:5000/api/users')
+        fetch('http://localhost:5000/api/users')
             .then(response => response.json())
             .then(data => setUsers(data))
             .catch(error => console.error('Error fetching users:', error));
@@ -31,7 +31,7 @@ function AdminDashboard() {
     }
 
     const handleExportData = async (format) => {
-        const response = await fetch('https://localhost:5000/api/export-data');
+        const response = await fetch('http://localhost:5000/api/export-data');
         const data = await response.json();
         let blob;
         let fileName;

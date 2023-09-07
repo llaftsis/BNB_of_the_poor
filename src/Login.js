@@ -14,7 +14,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Call the backend API to authenticate the user
-    const response = await fetch('https://localhost:5000/api/login', {
+    const response = await fetch('http://localhost:5000/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,9 +26,9 @@ function Login() {
     if (data.success) {
       login(data.user); // Update the user context
       console.log("Server Response:", data);
-      if (data.role === 'Διαχειριστής') {
+      if (data.user.role === 'Διαχειριστής') {
         navigate('/admin-dashboard'); // Οδηγεί τον διαχειριστή στη σελίδα διαχείρισης
-        console.log("Server Response:", data);  // <-- Προσθέστε αυτή τη γραμμή
+        console.log("Server Response:", data);
       } else {
         navigate('/'); // Οδηγεί τους άλλους χρήστες στην αρχική σελίδα
         }

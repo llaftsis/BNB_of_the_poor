@@ -25,6 +25,7 @@ function SearchGrid() {
         } else if (contentType && contentType.includes("application/json")) {
           const data = await response.json();
           console.log("Response data:", data);
+          
           setResults(data || []);  // Set results directly, defaulting to an empty array if undefined
         } else {
           throw new Error('Invalid content type: Expected application/json but received ' + contentType);

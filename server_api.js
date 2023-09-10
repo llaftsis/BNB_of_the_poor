@@ -25,7 +25,7 @@ app.get('/api/apartments', (req, res) => {
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
 
-  connection.query(`SELECT id, username, password, role FROM Users WHERE username = ?`, [username], async (error, results) => {
+  connection.query(`SELECT id, username, password, role, isApproved FROM Users WHERE username = ?`, [username], async (error, results) => {
     if (error) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -34,7 +34,8 @@ app.post('/api/login', (req, res) => {
       const user = {
         id: results[0].id,  // <-- Include the user's ID
         username: results[0].username,
-        role: results[0].role
+        role: results[0].role,
+        isApproved: results[0].isApproved
       };
       res.json({ success: true, user, message: 'Login successful' });  // <-- Return the user object
     } else {
@@ -184,6 +185,21 @@ app.post('/api/change-password', async (req, res) => {
       });
   });
 });
+
+// Fetch apartments for a specific user
+app.get('/api/apartments/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const query = 'SELECT * FROM Apartments WHERE owner_id = ?';
+  
+  connection.query(query, [userId], (error, results) => {
+      if (error) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.json(results);
+  });
+});
+
+
 
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);

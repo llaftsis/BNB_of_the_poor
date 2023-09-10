@@ -1,14 +1,5 @@
 USE ApartmentSearch;
 
-CREATE TABLE Apartments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    check_in_date DATE NOT NULL,
-    check_out_date DATE NOT NULL,
-    number_of_guests INT(2) NOT NULL,
-    location ENUM('Αθήνα', 'Θεσσαλονίκη', 'Κρήτη') NOT NULL,
-    category ENUM('Δωμάτια', 'Κατοικίες', 'Ξενοδοχεία') NOT NULL
-);
-
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
@@ -19,6 +10,26 @@ CREATE TABLE Users (
     phone VARCHAR(15) NOT NULL,
     isApproved BOOLEAN DEFAULT TRUE,
     role ENUM('Οικοδεσπότης', 'Ενοικιαστής', 'Διαχειριστής') NOT NULL
+);
+
+CREATE TABLE Apartments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    open_date DATE NOT NULL,
+    close_date DATE NOT NULL,
+    number_of_guests INT(2) NOT NULL,
+    location ENUM('Αθήνα', 'Θεσσαλονίκη', 'Κρήτη') NOT NULL,
+	type_of_apartment ENUM('Room', 'Whole Apartment') NOT NULL,
+    owner_id INT,
+    FOREIGN KEY (owner_id) REFERENCES Users(id),
+    min_price DECIMAL(10, 2) NOT NULL,
+    additional_cost_per_person DECIMAL(10, 2) NOT NULL,
+    rules TEXT,
+    description TEXT,
+    number_of_beds INT(2),
+    number_of_bathrooms INT(2),
+    number_of_rooms INT(2),
+    living_room BOOLEAN,
+    square_meters DECIMAL(10,2)
 );
 
 CREATE TABLE UserListings (

@@ -18,6 +18,7 @@ function Header() {
           {user ? (
   <>
     <li><Link to={`/users/${user.id}`}>{user.username}</Link></li>
+    <li><Link to="/apartment-management">Manage Apartments</Link></li>
     <li onClick={() => {
        logout();
        navigate('/');

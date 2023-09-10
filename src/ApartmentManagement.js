@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AuthContext from './AuthContext';
+
 import {
     Button, Tooltip, Fab, Dialog, TextField, Grid, makeStyles, Select, MenuItem, FormControl, InputLabel, Checkbox, FormControlLabel
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,7 @@ const ApartmentManagement = () => {
     const classes = useStyles();
     const [newApartment, setNewApartment] = useState({});
 
-    const theme = createMuiTheme({
+    const theme = createTheme({
         palette: {
           primary: {
             main: '#ffffff', // This is white
@@ -58,19 +59,25 @@ const ApartmentManagement = () => {
           },
         },
       });
-      
-    useEffect(() => {
-        const fetchUserApartments = async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/api/apartments/${user.id}`);
-                const data = await response.json();
-                setApartments(data);
-            } catch (error) {
-                console.error("Error fetching user's apartments:", error);
-            }
-        };
-        fetchUserApartments();
-    }, [user.id]);
+    
+      useEffect(() => {
+        if (user && userRole === 'Οικοδεσπότης' && isApproved) {
+            const fetchUserApartments = async () => {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/apartments/${user.id}`);
+                    const data = await response.json();
+                    setApartments(data);
+                } catch (error) {
+                    console.error("Error fetching user's apartments:", error);
+                }
+                setLoading(false);
+            };
+            fetchUserApartments();
+        } else {
+            setLoading(false);
+        }
+    }, [user, userRole, isApproved]);
+
     const handleChange = event => {
         const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
         setNewApartment({
@@ -103,20 +110,6 @@ const ApartmentManagement = () => {
         }
     };
 
-    if (userRole === 'Οικοδεσπότης' && isApproved) {
-        fetch(`http://localhost:5000/api/apartments/${user.id}`)
-            .then(response => response.json())
-            .then(data => {
-                setApartments(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error("Error fetching apartments:", error);
-                setLoading(false);
-            });
-    } else {
-        setLoading(false);
-    }
 
     const handleOpen = () => {
         setOpen(true);
@@ -145,12 +138,12 @@ const ApartmentManagement = () => {
             <div className={classes.container}>
                 <h2>Your Apartments</h2>
                 {apartments.map(apartment => (
-                    <Link to={`/apartment/${apartment.id}`} className={classes.apartmentLink}>
-                        <div key={apartment.id} className={classes.apartmentItem}>
-                            {apartment.type_of_apartment} in {apartment.location}
-                        </div>
-                    </Link>
-                ))}
+                   <Link key={apartment.id} to={`/apartment/${apartment.id}`} className={classes.apartmentLink}>
+                     <div className={classes.apartmentItem}>
+                       {apartment.type_of_apartment} in {apartment.location}
+                    </div>
+                   </Link>
+                 ))}
                 <Tooltip title="Add Apartment" aria-label="add">
                     <Fab color="secondary" className={classes.fab} onClick={handleOpen}>
                         <AddIcon />

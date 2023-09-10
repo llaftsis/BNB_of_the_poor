@@ -199,6 +199,34 @@ app.get('/api/apartments/:userId', (req, res) => {
   });
 });
 
+// Add a new apartment
+app.post('/api/apartments', (req, res) => {
+  const {
+      open_date, close_date, number_of_guests, location, type_of_apartment, owner_id,
+      min_price, additional_cost_per_person, rules, description, number_of_beds,
+      number_of_bathrooms, number_of_rooms, living_room, square_meters
+  } = req.body;
+
+  connection.query(
+      'INSERT INTO Apartments (open_date, close_date, number_of_guests, location, type_of_apartment, owner_id, min_price, additional_cost_per_person, rules, description, number_of_beds, number_of_bathrooms, number_of_rooms, living_room, square_meters) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [open_date, close_date, number_of_guests, location, type_of_apartment, owner_id, min_price, additional_cost_per_person, rules, description, number_of_beds, number_of_bathrooms, number_of_rooms, living_room, square_meters],
+      (error, results) => {
+          if (error) {
+              return res.status(500).json({ error: 'Internal Server Error' });
+          }
+          res.json({ success: true, apartment: { id: results.insertId, ...req.body } });
+      }
+  );
+});
+app.get('/api/apartment/:apartmentId', (req, res) => {
+  const apartmentId = req.params.apartmentId;
+  connection.query('SELECT * FROM Apartments WHERE id = ?', [apartmentId], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    res.json(results[0]);
+  });
+});
 
 
 app.listen(5000, '127.0.0.1', () => {

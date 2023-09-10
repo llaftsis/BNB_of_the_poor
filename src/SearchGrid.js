@@ -1,51 +1,56 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-function SearchGrid({ searchParams }) {
-  const [results, setResults] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const resultsPerPage = 10;
-
+function SearchGrid() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [results, setResults] = useState([]);  // Ensure initialized as an empty array
+  const location = useLocation();
+  
   useEffect(() => {
-    // Ideally, you'd fetch this data from an API
-    async function fetchData() {
+    const searchParams = new URLSearchParams(location.search);
+    const checkInDate = searchParams.get('checkInDate');
+    const checkOutDate = searchParams.get('checkOutDate');
+    const guests = searchParams.get('guests');
+    const city = searchParams.get('city');
+    const category = searchParams.get('category');
+    
+    const fetchResults = async () => {
       try {
-        let response = await fetch('/api/search', {
-          method: 'POST',
-          body: JSON.stringify(searchParams),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        let data = await response.json();
-
-        // Filter for availability and sort by price
-        data = data
-          .filter(item => item.isAvailableOn(searchParams.dates))
-          .sort((a, b) => a.price - b.price);
-
-        setResults(data);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
+        const response = await fetch(`http://localhost:5000/api/search?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&guests=${guests}&city=${city}&category=${category}`);
+        const contentType = response.headers.get("content-type");
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        } else if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          console.log("Response data:", data);
+          setResults(data || []);  // Set results directly, defaulting to an empty array if undefined
+        } else {
+          throw new Error('Invalid content type: Expected application/json but received ' + contentType);
+        }
+      } catch (err) {
+          setError(err.message);  // Setting the error message
+      } finally {
+          setLoading(false);
       }
-    }
+    };
 
-    fetchData();
-  }, [searchParams]);
+    fetchResults();
+  }, [location.search]);
 
-  // Get current results for pagination
-  const indexOfLastResult = currentPage * resultsPerPage;
-  const indexOfFirstResult = indexOfLastResult - resultsPerPage;
-  const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="results-grid">
-      {currentResults.map(result => (
-        <div key={result.id} className="grid-item">
-          <img src={result.image} alt={result.name} />
-          <p>${result.price}/day</p>
-          <p>{result.type}</p>
-          <p>{result.beds} beds</p>
-          <p>{result.reviewsCount} reviews - {result.rating} ⭐</p>
+    <div className="results-container">
+      {Array.isArray(results) && results.map(listing => (  // Ensure results is an array before mapping
+        <div key={listing.id} className="listing-card">
+          <div><strong>Check-in:</strong> {listing.check_in_date}</div>
+          <div><strong>Check-out:</strong> {listing.check_out_date}</div>
+          <div><strong>Guests:</strong> {listing.number_of_guests}</div>
+          <div><strong>Location:</strong> {listing.location}</div>
+          <div><strong>Category:</strong> {listing.category}</div>
         </div>
       ))}
     </div>
@@ -53,4 +58,3 @@ function SearchGrid({ searchParams }) {
 }
 
 export default SearchGrid;
-  

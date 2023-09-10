@@ -16,6 +16,8 @@ import AdminDashboard from './AdminDashboard';
 import UserDetails from './UserDetails';
 import UserProfile from './UserProfile';
 import ApartmentManagement from './ApartmentManagement';
+import SearchGrid from './SearchGrid';
+
 
 function App() {
   const [showingRegistration, setShowingRegistration] = useState(false);
@@ -32,6 +34,7 @@ function App() {
               <Route path="/" element={<SearchForm />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/search" element={<SearchGrid />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/user-details/:id" element={<UserDetails />} />
               <Route path="/users/:id" element={<UserProfile />} />

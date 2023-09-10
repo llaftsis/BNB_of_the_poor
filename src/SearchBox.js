@@ -8,10 +8,17 @@ import { useNavigate } from 'react-router-dom'; // Make sure you've installed re
 function SearchBox() {
   const navigate = useNavigate();
 
-const handleSearch = (e) => {
-  e.preventDefault();  // Prevent the default form submission behavior
-  navigate('/search');  // Navigate to the SearchResults page
-};
+  const handleSearch = (e) => {
+    e.preventDefault();
+  
+    const checkInDate = e.target["check-in-date"].value;
+    const checkOutDate = e.target["check-out-date"].value;
+    const guests = e.target.guests.value;
+    const city = e.target.city.value;
+    const category = e.target.category.value;
+  
+    navigate(`/search?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&guests=${guests}&city=${city}&category=${category}`);
+  };
 
   return (
     <div className="search-container">
@@ -38,8 +45,6 @@ const handleSearch = (e) => {
           <label htmlFor="rooms">Δωμάτια</label>
           <input type="radio" id="apartments" name="category" value="apartments" />
           <label htmlFor="apartments">Κατοικίες</label>
-          <input type="radio" id="hotels" name="category" value="hotels" />
-          <label htmlFor="hotels">Ξενοδοχεία</label>
         </fieldset>
 
         <button className="search-button" type="submit">Αναζήτηση</button>

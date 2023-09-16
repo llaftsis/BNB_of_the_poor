@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function SearchGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);  // Ensure initialized as an empty array
   const location = useLocation();
-  
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const checkInDate = searchParams.get('checkInDate');
@@ -14,22 +15,19 @@ function SearchGrid() {
     const guests = searchParams.get('guests');
     const city = searchParams.get('city');
     const category = searchParams.get('category');
-    
+
     const fetchResults = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/search?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&guests=${guests}&city=${city}&category=${category}`);
-        const contentType = response.headers.get("content-type");
-        
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        } else if (contentType && contentType.includes("application/json")) {
-          const data = await response.json();
-          console.log("Response data:", data);
-          
-          setResults(data || []);  // Set results directly, defaulting to an empty array if undefined
+        const data = await response.json();
+        console.log("Response data:", data);
+
+        if (Array.isArray(data)) {
+          setResults(data);
         } else {
-          throw new Error('Invalid content type: Expected application/json but received ' + contentType);
+          console.error("Expected the response to be an array but received:", data);
         }
+
       } catch (err) {
           setError(err.message);  // Setting the error message
       } finally {
@@ -43,15 +41,39 @@ function SearchGrid() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  const styles = {
+    resultsContainer: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+      gap: '16px',
+      padding: '20px',
+      backgroundColor: '#f3f4f6'
+    },
+    listingCard: {
+      border: '1px solid #d1d5db',
+      borderRadius: '5px',
+      padding: '16px',
+      backgroundColor: '#ffffff',
+      transition: 'transform 0.2s',
+      '&:hover': {
+        transform: 'scale(1.05)',
+      }
+    },
+    link: {
+      textDecoration: 'none',
+      color: '#111827'
+    }
+  };
+  
   return (
-    <div className="results-container">
-      {Array.isArray(results) && results.map(listing => (  // Ensure results is an array before mapping
-        <div key={listing.id} className="listing-card">
-          <div><strong>Check-in:</strong> {listing.check_in_date}</div>
-          <div><strong>Check-out:</strong> {listing.check_out_date}</div>
-          <div><strong>Guests:</strong> {listing.number_of_guests}</div>
-          <div><strong>Location:</strong> {listing.location}</div>
-          <div><strong>Category:</strong> {listing.category}</div>
+    <div style={styles.resultsContainer}>
+      {results.map(apartment => (
+        <div key={apartment.id} style={styles.listingCard}>
+          <Link to={`/apartment/${apartment.id}`} style={styles.link}>
+            {apartment.type_of_apartment} in {apartment.location}
+            <div>Open Date: {apartment.open_date}</div>
+            <div>Close Date: {apartment.close_date}</div>
+          </Link>
         </div>
       ))}
     </div>

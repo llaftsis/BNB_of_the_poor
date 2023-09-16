@@ -34,16 +34,16 @@ function SearchBox() {
 
         <label htmlFor="city">Πόλη:</label>
         <select id="city" name="city">
-          <option value="athens">Αθήνα</option>
-          <option value="thessaloniki">Θεσσαλονίκη</option>
-          <option value="heraklion">Ηράκλειο</option>
+          <option value="Athens">Αθήνα</option>
+          <option value="Thessaloniki">Θεσσαλονίκη</option>
+          <option value="Crete">Ηράκλειο</option>
         </select>
 
         <fieldset>
           <legend>Κατηγορία</legend>
-          <input type="radio" id="rooms" name="category" value="rooms" />
+          <input type="radio" id="rooms" name="category" value="Room" />
           <label htmlFor="rooms">Δωμάτια</label>
-          <input type="radio" id="apartments" name="category" value="apartments" />
+          <input type="radio" id="apartments" name="category" value="Whole Apartment" />
           <label htmlFor="apartments">Κατοικίες</label>
         </fieldset>
 

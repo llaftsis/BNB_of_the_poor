@@ -227,24 +227,29 @@ app.get('/api/apartment/:apartmentId', (req, res) => {
     res.json(results[0]);
   });
 });
+
 app.get('/api/search', async (req, res) => {
   try {
-      console.log('This is a log message');
-      console.log('Received request for /api/search with query:', req.query);
-
-      const { checkInDate, checkOutDate, guests, city, category } = req.query;
-
-      // Assuming connection.query is asynchronous, using await to get results
-      const results = connection.query(
-          'SELECT * FROM Apartments WHERE check_in_date <= ? AND check_out_date >= ? AND number_of_guests = ? AND location = ? AND category = ?',
-          [checkInDate, checkOutDate, guests, city, category]
-      );
-
-      console.log('Query results:', results);
-
-      // Using res.json() to send the results and set the content type to application/json
-      //res.json({ results });
-      res.json({ results: results[0] });
+    console.log('This is a log message');
+    console.log('Received request for /api/search with query:', req.query);
+    
+    const { checkInDate, checkOutDate, guests, city, category } = req.query;
+    
+    connection.query(
+        'SELECT * FROM Apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests = ? AND location = ? AND type_of_apartment = ?',
+        [checkInDate, checkOutDate, guests, city, category],
+        (err, results) => {
+            if (err) {
+                console.error("Error executing query:", err);
+                res.status(500).send("Internal Server Error");
+                return;
+            }
+    
+            console.log('Query results:', results);
+            res.json(results);
+        }
+    );
+    
 
   } catch (error) {
       console.error('Error processing request:', error);

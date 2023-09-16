@@ -17,7 +17,7 @@ CREATE TABLE Apartments (
     open_date DATE NOT NULL,
     close_date DATE NOT NULL,
     number_of_guests INT(2) NOT NULL,
-    location ENUM('Αθήνα', 'Θεσσαλονίκη', 'Κρήτη') NOT NULL,
+    location ENUM('Athens', 'Thessaloniki', 'Crete') NOT NULL,
 	type_of_apartment ENUM('Room', 'Whole Apartment') NOT NULL,
     owner_id INT,
     FOREIGN KEY (owner_id) REFERENCES Users(id),

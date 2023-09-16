@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: apartmentsearch
+-- Host: localhost    Database: apartmentsearch
 -- ------------------------------------------------------
--- Server version	8.0.34
+-- Server version	8.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +42,7 @@ CREATE TABLE `apartments` (
   PRIMARY KEY (`id`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `apartments_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,7 +51,7 @@ CREATE TABLE `apartments` (
 
 LOCK TABLES `apartments` WRITE;
 /*!40000 ALTER TABLE `apartments` DISABLE KEYS */;
-INSERT INTO `apartments` VALUES (1,'2023-05-01','2023-05-10',2,'Athens','Room',1,50.00,10.00,'No pets. No smoking.','A cozy room in the heart of Athens.',1,1,1,0,25.00),(2,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00),(3,'2023-07-01','2023-07-20',6,'Crete','Whole Apartment',3,150.00,20.00,'Respect the space.','Luxurious apartment near the beach.',3,2,4,1,90.00),(4,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00);
+INSERT INTO `apartments` VALUES (1,'2023-05-01','2023-05-10',2,'Athens','Room',1,50.00,10.00,'No pets. No smoking.','A cozy room in the heart of Athens.',1,1,1,0,25.00),(2,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00),(3,'2023-07-01','2023-07-20',6,'Crete','Whole Apartment',3,150.00,20.00,'Respect the space.','Luxurious apartment near the beach.',3,2,4,1,90.00),(4,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00),(5,'2023-09-18','2023-09-29',3,'Athens','Room',5,100.00,2.00,'tesatear2','testtest',12,2,3,1,4.00);
 /*!40000 ALTER TABLE `apartments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -64,4 +64,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-16 19:21:35
+-- Dump completed on 2023-09-16 21:12:49

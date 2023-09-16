@@ -218,15 +218,29 @@ app.post('/api/apartments', (req, res) => {
       }
   );
 });
-app.get('/api/apartment/:apartmentId', (req, res) => {
+app.get('/api/apartment/:apartmentId', async (req, res) => {
   const apartmentId = req.params.apartmentId;
-  connection.query('SELECT * FROM Apartments WHERE id = ?', [apartmentId], (error, results) => {
-    if (error) {
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-    res.json(results[0]);
-  });
+  try {
+      const query = `
+          SELECT a.*, u.username 
+          FROM Apartments a 
+          JOIN Users u ON a.owner_id = u.id 
+          WHERE a.id = ?
+      `;
+      connection.query(query, [apartmentId], (err, results) => {
+          if (err) {
+              console.error("Error executing query:", err);
+              res.status(500).send("Internal Server Error");
+              return;
+          }
+          res.json(results[0]);
+      });
+  } catch (error) {
+      console.error("Error fetching apartment data:", error);
+      res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 
 app.get('/api/search', async (req, res) => {
   try {
@@ -236,7 +250,7 @@ app.get('/api/search', async (req, res) => {
     const { checkInDate, checkOutDate, guests, city, category } = req.query;
     
     connection.query(
-        'SELECT * FROM Apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests = ? AND location = ? AND type_of_apartment = ?',
+        'SELECT * FROM Apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests >= ? AND location = ? AND type_of_apartment = ?',
         [checkInDate, checkOutDate, guests, city, category],
         (err, results) => {
             if (err) {
@@ -258,6 +272,40 @@ app.get('/api/search', async (req, res) => {
   }
 }); 
 
+app.put('/api/edit-apartment/:apartmentId', async (req, res) => {
+  const apartmentId = req.params.apartmentId;
+  const userId = req.body.userId;
+  const updatedData = req.body.updatedData;
+
+  //SQL query
+  const query = `
+      UPDATE Apartments 
+      SET 
+          open_date = ?, close_date = ?, number_of_guests = ?, location = ?, 
+          type_of_apartment = ?, min_price = ?, additional_cost_per_person = ?,
+          rules = ?, description = ?, number_of_beds = ?, number_of_bathrooms = ?,
+          number_of_rooms = ?, living_room = ?, square_meters = ?
+      WHERE id = ? AND owner_id = ?
+  `;
+
+  const values = [
+      updatedData.open_date, updatedData.close_date, updatedData.number_of_guests,
+      updatedData.location, updatedData.type_of_apartment, updatedData.min_price,
+      updatedData.additional_cost_per_person, updatedData.rules, updatedData.description,
+      updatedData.number_of_beds, updatedData.number_of_bathrooms, updatedData.number_of_rooms,
+      updatedData.living_room, updatedData.square_meters, apartmentId, userId
+  ];
+
+  // Execute the query
+  connection.query(query, values, (err, results) => {
+      if (err) {
+          console.error("Error executing query:", err);
+          res.status(500).send("Internal Server Error");
+          return;
+      }
+      res.json({ message: 'Apartment updated successfully.' });
+  });
+});
 
 
 app.listen(5000, '127.0.0.1', () => {

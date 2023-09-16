@@ -212,9 +212,9 @@ const ApartmentManagement = () => {
                                     value={newApartment.location || ''}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value={'Αθήνα'}>Αθήνα</MenuItem>
-                                    <MenuItem value={'Θεσσαλονίκη'}>Θεσσαλονίκη</MenuItem>
-                                    <MenuItem value={'Κρήτη'}>Κρήτη</MenuItem>
+                                    <MenuItem value={'Athens'}>Athens</MenuItem>
+                                    <MenuItem value={'Thessaloniki'}>Thessaloniki</MenuItem>
+                                    <MenuItem value={'Crete'}>Crete</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>

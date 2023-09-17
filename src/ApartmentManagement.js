@@ -132,7 +132,6 @@ const ApartmentManagement = () => {
     }
 
 
-    
     return (
         <ThemeProvider theme={theme}>
             <div className={classes.container}>
@@ -140,7 +139,7 @@ const ApartmentManagement = () => {
                 {apartments.map(apartment => (
                    <Link key={apartment.id} to={`/apartment/${apartment.id}`} className={classes.apartmentLink}>
                      <div className={classes.apartmentItem}>
-                       {apartment.type_of_apartment} in {apartment.location}
+                       {apartment.nickname}
                     </div>
                    </Link>
                  ))}
@@ -301,6 +300,39 @@ const ApartmentManagement = () => {
                                 rows={4}
                                 name="rules"
                                 value={newApartment.rules || ''}
+                                onChange={handleChange}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Coordinates"
+                                multiline
+                                rows={4}
+                                name="cordinates"
+                                value={newApartment.exact_location || ''}
+                                onChange={handleChange}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Address"
+                                multiline
+                                rows={4}
+                                name="address"
+                                value={newApartment.address || ''}
+                                onChange={handleChange}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Nickname"
+                                multiline
+                                rows={4}
+                                name="Nickname"
+                                value={newApartment.Nickname || ''}
                                 onChange={handleChange}
                                 fullWidth
                             />

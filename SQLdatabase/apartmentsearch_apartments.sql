@@ -39,6 +39,9 @@ CREATE TABLE `apartments` (
   `number_of_rooms` int DEFAULT NULL,
   `living_room` tinyint(1) DEFAULT NULL,
   `square_meters` decimal(10,2) DEFAULT NULL,
+  `exact_location` VARCHAR(40),
+  `address` VARCHAR(20),
+  `nickname` VARCHAR(20),
   PRIMARY KEY (`id`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `apartments_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`)
@@ -51,7 +54,7 @@ CREATE TABLE `apartments` (
 
 LOCK TABLES `apartments` WRITE;
 /*!40000 ALTER TABLE `apartments` DISABLE KEYS */;
-INSERT INTO `apartments` VALUES (1,'2023-05-01','2023-05-10',2,'Athens','Room',1,50.00,10.00,'No pets. No smoking.','A cozy room in the heart of Athens.',1,1,1,0,25.00),(2,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00),(3,'2023-07-01','2023-07-20',6,'Crete','Whole Apartment',3,150.00,20.00,'Respect the space.','Luxurious apartment near the beach.',3,2,4,1,90.00),(4,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00),(5,'2023-09-18','2023-09-29',3,'Athens','Room',5,100.00,2.00,'tesatear2','testtest',12,2,3,1,4.00);
+INSERT INTO `apartments` VALUES (1,'2023-05-01','2023-05-10',2,'Athens','Room',1,50.00,10.00,'No pets. No smoking.','A cozy room in the heart of Athens.',1,1,1,0,25.00,'37.9838,23.7275','Acropolis, Athens', 'Test1'),(2,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00,'37.9838,23.7275','Kastra, Saloniki', 'TestThes'),(3,'2023-07-01','2023-07-20',6,'Crete','Whole Apartment',3,150.00,20.00,'Respect the space.','Luxurious apartment near the beach.',3,2,4,1,90.00,'100.9838,23.7275','Iraklio100', 'Creatafarms'),(4,'2023-06-01','2023-06-15',4,'Thessaloniki','Whole Apartment',2,100.00,15.00,'No loud music after 10 pm.','Spacious apartment with a sea view.',2,1,3,1,70.00,'60.9838,24.7275','testaddress', 'Salou'),(5,'2023-09-18','2023-09-29',3,'Athens','Room',5,100.00,2.00,'tesatear2','testtest',12,2,3,1,4.00,'37.9838,23.7275','Kafeniou 2, Athens', 'Athinospito');
 /*!40000 ALTER TABLE `apartments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

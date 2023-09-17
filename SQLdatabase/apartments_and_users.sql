@@ -12,7 +12,7 @@ CREATE TABLE Users (
     role ENUM('Οικοδεσπότης', 'Ενοικιαστής', 'Διαχειριστής') NOT NULL
 );
 
-CREATE TABLE Apartments (
+CREATE TABLE apartments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     open_date DATE NOT NULL,
     close_date DATE NOT NULL,
@@ -29,7 +29,10 @@ CREATE TABLE Apartments (
     number_of_bathrooms INT(2),
     number_of_rooms INT(2),
     living_room BOOLEAN,
-    square_meters DECIMAL(10,2)
+    square_meters DECIMAL(10,2),
+    exact_location VARCHAR(40),
+    address VARCHAR(20),
+    nickname VARCHAR(20)
 );
 
 CREATE TABLE UserListings (

@@ -1,8 +1,20 @@
+
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import AuthContext from './AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, useMapEvents, Icon, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
+const icon = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 
 function EditApartment() {
     const { apartmentId } = useParams();
@@ -23,34 +35,83 @@ function EditApartment() {
         number_of_bathrooms: '',
         number_of_rooms: '',
         living_room: '',
-        square_meters: ''
+        square_meters: '',
+        exact_location: '',
+        address: '',
+        nickname: ''
     });
-    
+
+    const [mapCenter, setMapCenter] = useState([37.974514992024616,23.72909545898438]);  // default center
+    function UpdateMapCenter() {
+        const map = useMap();
+        useEffect(() => {
+            if (formData.exact_location) {
+                const [lat, lng] = formData.exact_location.split(',').map(coord => parseFloat(coord));
+                map.flyTo([lat, lng], 13);
+            }
+        }, [formData.exact_location, map]);
+        return null;
+    }
+    useEffect(() => {
+        if (formData.exact_location) {
+            const [lat, lng] = formData.exact_location.split(',').map(coord => parseFloat(coord));
+            setMapCenter([lat, lng]);
+        }
+    }, [formData.exact_location]);
+    function DraggableMarker(props) {
+        const [position, setPosition] = useState(props.initialPosition);
+        const markerRef = React.useRef(null);
+        const eventHandlers = {
+            dragend() {
+                const marker = markerRef.current;
+                if (marker != null) {
+                    const newPosition = marker.getLatLng();
+                    setPosition(newPosition);
+                    setFormData(prevData => ({
+                        ...prevData,
+                        exact_location: `${newPosition.lat},${newPosition.lng}`
+                    }));
+                }
+            }
+        };
+        useEffect(() => {
+            if (formData.exact_location) {
+                const [lat, lng] = formData.exact_location.split(',');
+                setPosition([parseFloat(lat), parseFloat(lng)]);
+            }
+        }, [formData.exact_location]);
+
+        return <Marker draggable={true} position={position} ref={markerRef} eventHandlers={eventHandlers} icon={icon} />;
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`http://localhost:5000/api/apartment/${apartmentId}`);
                 const data = await response.json();
-                
-const convertDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0 indexed
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
+                    
+                const convertDate = (dateString) => {
+                    const date = new Date(dateString);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0 indexed
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                };
+                data.open_date = convertDate(data.open_date);
+                data.close_date = convertDate(data.close_date);
+                setFormData(data);
+                if (data.exact_location) {
+                    const [lat, lng] = data.exact_location.split(',').map(coord => parseFloat(coord));
+                    setMapCenter([lat, lng]); // set the map center to the exact_location of the apartment
+                }
 
-data.open_date = convertDate(data.open_date);
-data.close_date = convertDate(data.close_date);
-
-setFormData(data);
             } catch (error) {
                 console.error("Error fetching apartment data:", error);
             }
         };
         fetchData();
     }, [apartmentId]);
-    
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -80,7 +141,7 @@ setFormData(data);
             console.error("Error updating apartment:", error);
         }
     };
-    
+
     return (
         <form onSubmit={handleSubmit}>
             <label>
@@ -98,7 +159,7 @@ setFormData(data);
 <option value="Crete">Crete</option>
 </select>
             </label>
-            
+
 <label>
     Open Date:
     <input type="date" name="open_date" value={formData.open_date?.split("T")[0]} onChange={handleChange} />
@@ -147,6 +208,31 @@ setFormData(data);
             <label>
                 Square Meters:
                 <input type="text" name="square_meters" value={formData.square_meters} onChange={handleChange} />
+            </label>
+            <label>
+                Exact location coordinates:
+                <input type="text" name="exact_location" value={formData.exact_location} onChange={handleChange} />
+                <MapContainer center={mapCenter} zoom={13} style={{ height: '300px', width: '100%' }}>
+                 <UpdateMapCenter />
+                  <TileLayer
+                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                   />
+                    <DraggableMarker initialPosition={mapCenter} onMarkerPositionChange={(latLng) => {
+                     setFormData(prevData => ({
+                      ...prevData,
+                     exact_location: `${latLng.lat},${latLng.lng}`
+                      }));
+                      }} />
+               </MapContainer>
+            </label>
+            <label>
+                Address:
+                <input type="text" name="address" value={formData.address} onChange={handleChange} />
+            </label>
+            <label>
+                Apartment Nickname:
+                <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} />
             </label>
             <button type="submit">Save Changes</button>
         </form>

@@ -13,7 +13,7 @@ app.use(cors());
 
 // Fetch all apartments
 app.get('/api/apartments', (req, res) => {
-  connection.query('SELECT * FROM Apartments', (error, results) => {
+  connection.query('SELECT * FROM apartments', (error, results) => {
     if (error) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -82,7 +82,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.get('/api/export-data', (req, res) => {
-  connection.query('SELECT * FROM Apartments; SELECT * FROM Users', (error, results) => {
+  connection.query('SELECT * FROM apartments; SELECT * FROM Users', (error, results) => {
       if (error) {
           console.error("Database Error:", error);  // <-- Log the specific error for debugging
           return res.status(500).json({ error: 'Internal Server Error' });
@@ -189,7 +189,7 @@ app.post('/api/change-password', async (req, res) => {
 // Fetch apartments for a specific user
 app.get('/api/apartments/:userId', (req, res) => {
   const userId = req.params.userId;
-  const query = 'SELECT * FROM Apartments WHERE owner_id = ?';
+  const query = 'SELECT * FROM apartments WHERE owner_id = ?';
   
   connection.query(query, [userId], (error, results) => {
       if (error) {
@@ -204,12 +204,12 @@ app.post('/api/apartments', (req, res) => {
   const {
       open_date, close_date, number_of_guests, location, type_of_apartment, owner_id,
       min_price, additional_cost_per_person, rules, description, number_of_beds,
-      number_of_bathrooms, number_of_rooms, living_room, square_meters
+      number_of_bathrooms, number_of_rooms, living_room, square_meters, exact_location, address, nickname
   } = req.body;
 
   connection.query(
-      'INSERT INTO Apartments (open_date, close_date, number_of_guests, location, type_of_apartment, owner_id, min_price, additional_cost_per_person, rules, description, number_of_beds, number_of_bathrooms, number_of_rooms, living_room, square_meters) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [open_date, close_date, number_of_guests, location, type_of_apartment, owner_id, min_price, additional_cost_per_person, rules, description, number_of_beds, number_of_bathrooms, number_of_rooms, living_room, square_meters],
+      'INSERT INTO apartments (open_date, close_date, number_of_guests, location, type_of_apartment, owner_id, min_price, additional_cost_per_person, rules, description, number_of_beds, number_of_bathrooms, number_of_rooms, living_room, square_meters, exact_location, address, nickname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [open_date, close_date, number_of_guests, location, type_of_apartment, owner_id, min_price, additional_cost_per_person, rules, description, number_of_beds, number_of_bathrooms, number_of_rooms, living_room, square_meters, exact_location, address, nickname],
       (error, results) => {
           if (error) {
               return res.status(500).json({ error: 'Internal Server Error' });
@@ -223,7 +223,7 @@ app.get('/api/apartment/:apartmentId', async (req, res) => {
   try {
       const query = `
           SELECT a.*, u.username 
-          FROM Apartments a 
+          FROM apartments a 
           JOIN Users u ON a.owner_id = u.id 
           WHERE a.id = ?
       `;
@@ -250,7 +250,7 @@ app.get('/api/search', async (req, res) => {
     const { checkInDate, checkOutDate, guests, city, category } = req.query;
     
     connection.query(
-        'SELECT * FROM Apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests >= ? AND location = ? AND type_of_apartment = ?',
+        'SELECT * FROM apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests >= ? AND location = ? AND type_of_apartment = ?',
         [checkInDate, checkOutDate, guests, city, category],
         (err, results) => {
             if (err) {
@@ -279,12 +279,12 @@ app.put('/api/edit-apartment/:apartmentId', async (req, res) => {
 
   //SQL query
   const query = `
-      UPDATE Apartments 
+      UPDATE apartments 
       SET 
           open_date = ?, close_date = ?, number_of_guests = ?, location = ?, 
           type_of_apartment = ?, min_price = ?, additional_cost_per_person = ?,
           rules = ?, description = ?, number_of_beds = ?, number_of_bathrooms = ?,
-          number_of_rooms = ?, living_room = ?, square_meters = ?
+          number_of_rooms = ?, living_room = ?, square_meters = ?, exact_location = ?, address = ?, nickname = ?
       WHERE id = ? AND owner_id = ?
   `;
 
@@ -293,7 +293,7 @@ app.put('/api/edit-apartment/:apartmentId', async (req, res) => {
       updatedData.location, updatedData.type_of_apartment, updatedData.min_price,
       updatedData.additional_cost_per_person, updatedData.rules, updatedData.description,
       updatedData.number_of_beds, updatedData.number_of_bathrooms, updatedData.number_of_rooms,
-      updatedData.living_room, updatedData.square_meters, apartmentId, userId
+      updatedData.living_room, updatedData.square_meters, updatedData.exact_location, updatedData.address, updatedData.nickname, apartmentId, userId
   ];
 
   // Execute the query

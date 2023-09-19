@@ -41,6 +41,12 @@ CREATE TABLE UserListings (
     FOREIGN KEY(user_id) REFERENCES Users(id),
     FOREIGN KEY(apartment_id) REFERENCES Apartments(id)
 );
+CREATE TABLE apartment_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    apartment_id INT,
+    image_url VARCHAR(255),
+    FOREIGN KEY (apartment_id) REFERENCES apartments(id)
+);
 
 -- Admin user
 INSERT INTO Users (username, password, email, firstName, lastName, phone, role) VALUES ('admin', '$2b$12$6FgqfMQfxGjk/mY0Ukq/2uNupNjI4OhRRXu5/DdyMGfYN3Ctlz8/K', 'admin@bnbftwnwn.com', 'Admin', 'Admin', '0000000000', 'Διαχειριστής');

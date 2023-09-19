@@ -19,11 +19,16 @@ function ApartmentProfile() {
     const { apartmentId } = useParams();  // Get apartment ID from the URL
     const [apartment, setApartment] = useState(null);
     const { user } = useContext(AuthContext);
+    const [images, setImages] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        // Fetch apartment details
+        const fetchApartmentDetails = async () => {
             try {
                 const response = await fetch(`http://localhost:5000/api/apartment/${apartmentId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch apartment details');
+                }
                 const data = await response.json();
                 setApartment(data);
             } catch (error) {
@@ -31,8 +36,28 @@ function ApartmentProfile() {
             }
         };
     
-        fetchData();
+        // Fetch apartment images
+        const fetchApartmentImages = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/apartment-images/${apartmentId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch apartment images');
+                }
+                const data = await response.json();
+                if (data.success) {
+                    setImages(data.images);
+                }
+            } catch (error) {
+                console.error('Error fetching apartment images:', error);
+            }
+        };
+    
+        // Execute the fetch functions
+        fetchApartmentDetails();
+        fetchApartmentImages();
+    
     }, [apartmentId]);
+    
     
 
     return (
@@ -72,6 +97,10 @@ function ApartmentProfile() {
                     </div>
                     <p>Address: {apartment.address}</p>
                     <p>Nickname: {apartment.nickname}</p>
+                    <h2>Apartment Images</h2>
+                       {images.map((imageUrl, index) => (
+                        <img key={index} src={imageUrl} alt="Apartment" />
+                        ))}
                     <h3>Owner's Username: {apartment.username}</h3>
                     {user?.id === apartment?.owner_id && <Link to={`/edit-apartment/${apartment.id}`}>Edit</Link>}
                 </>

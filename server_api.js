@@ -6,10 +6,24 @@ const PORT = 5000;
 const cors = require('cors');
 const http = require('http');
 const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images/');  // 'images/' is the directory where the images will be saved. Make sure this directory exists.
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));  // Use the current timestamp as filename to avoid duplicates
+    }
+});
+
+const upload = multer({ storage: storage }).array('images', 10);  // Assuming max 10 images
 
 // Parse JSON requests
 app.use(express.json());
 app.use(cors());
+app.use('/images', express.static('C:\Users\laftsis\bnbftwxwn\images'));
 
 // Fetch all apartments
 app.get('/api/apartments', (req, res) => {
@@ -306,7 +320,44 @@ app.put('/api/edit-apartment/:apartmentId', async (req, res) => {
       res.json({ message: 'Apartment updated successfully.' });
   });
 });
+app.post('/api/upload-images', upload, (req, res) => {
+  console.log("Files uploaded:", req.files);
 
+  if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+  }
+
+  const apartmentId = req.body.apartmentId;  // Assuming you're sending the apartment ID in the request body
+
+  // Validate that apartmentId exists in your database before proceeding
+
+  const imagePaths = req.files.map(file => file.path);  // Extract file paths
+
+  // Save the file paths to the database associated with the apartment
+  const query = 'INSERT INTO apartment_images (apartment_id, image_url) VALUES ?';
+  const values = imagePaths.map(path => [apartmentId, path]);
+
+  connection.query(query, [values], (error, results) => {
+      if (error) {
+          console.error('Error storing image paths in database:', error);
+          return res.status(500).json({ error: 'Internal server error' });
+      }
+      res.json({ success: true, message: 'Images uploaded successfully' });
+  });
+});
+app.get('/api/apartment-images/:apartmentId', (req, res) => {
+  const apartmentId = req.params.apartmentId;
+
+  const query = 'SELECT image_url FROM apartment_images WHERE apartment_id = ?';
+  
+  connection.query(query, [apartmentId], (error, results) => {
+      if (error) {
+          console.error('Error fetching image paths from database:', error);
+          return res.status(500).json({ error: 'Internal server error' });
+      }
+      res.json({ success: true, images: results.map(row => row.image_url) });
+  });
+});
 
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);

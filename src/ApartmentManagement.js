@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AuthContext from './AuthContext';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
 
 import {
     Button, Tooltip, Fab, Dialog, TextField, Grid, makeStyles, Select, MenuItem, FormControl, InputLabel, Checkbox, FormControlLabel
@@ -40,6 +44,55 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ApartmentManagement = () => {
+        const [mapCenter, setMapCenter] = useState([37.974514992024616,23.72909545898438]);  // default center
+        const [uploadedImages, setUploadedImages] = useState([]);
+
+function UpdateMapCenter() {
+    const map = useMap();
+    useEffect(() => {
+        if (newApartment.exact_location) {
+            const [lat, lng] = newApartment.exact_location.split(',').map(coord => parseFloat(coord));
+            map.flyTo([lat, lng], 13);
+        }
+    }, [newApartment.exact_location, map]);
+    return null;
+}
+
+function DraggableMarker(props) {
+    const [position, setPosition] = useState(props.initialPosition);
+    const markerRef = React.useRef(null);
+    const eventHandlers = {
+        dragend() {
+            const marker = markerRef.current;
+            if (marker != null) {
+                const newPosition = marker.getLatLng();
+                setPosition(newPosition);
+                setNewApartment(prevData => ({
+                    ...prevData,
+                    exact_location: `${newPosition.lat},${newPosition.lng}`
+                }));
+            }
+        }
+    };
+    useEffect(() => {
+        if (newApartment.exact_location) {
+            const [lat, lng] = newApartment.exact_location.split(',');
+            setPosition([parseFloat(lat), parseFloat(lng)]);
+        }
+    }, [newApartment.exact_location]);
+
+    return <Marker draggable={true} position={position} ref={markerRef} eventHandlers={eventHandlers} icon={icon} />;
+}
+
+const icon = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
     const [apartments, setApartments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);  // State to control the dialog for adding apartment
@@ -85,6 +138,32 @@ const ApartmentManagement = () => {
           [event.target.name]: value
         });
       };
+      const handleImageSelection = (event) => {
+        const files = event.target.files;
+        setUploadedImages([...files]);
+    };
+    const handleImageUpload = async (apartmentId) => {
+        const formData = new FormData();
+        uploadedImages.forEach(image => {
+            formData.append('images', image);
+        });
+        formData.append('apartmentId', apartmentId);
+    
+        try {
+            const response = await fetch('http://localhost:5000/api/upload-images', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const responseData = await response.json();
+    
+            if (!responseData.success) {
+                alert('Error uploading images.');
+            }
+        } catch (error) {
+            console.error('Error uploading images:', error);
+        }
+    };
 
       const handleSubmit = async () => {
         try {
@@ -96,11 +175,13 @@ const ApartmentManagement = () => {
                     owner_id: user.id
                 })
             });
-            
+
             const responseData = await response.json();
-    
+
             if (responseData.success) {
                 setApartments(prevApartments => [...prevApartments, responseData.apartment]);
+                // Call the handleImageUpload function with the new apartment's ID
+                handleImageUpload(responseData.apartment.id);
                 handleClose();
             } else {
                 alert('Error adding apartment.');
@@ -305,15 +386,21 @@ const ApartmentManagement = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                label="Coordinates"
-                                multiline
-                                rows={4}
-                                name="cordinates"
-                                value={newApartment.exact_location || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
+                        <TextField
+                        label="Exact location coordinates"
+                        type="text"
+                        name="exact_location"
+                        value={newApartment.exact_location || ''}
+                        onChange={handleChange}
+                        fullWidth
+                        />
+                       <MapContainer center={mapCenter} zoom={13} style={{ height: '300px', width: '100%' }}>
+                          <TileLayer
+                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                          />
+                         <DraggableMarker initialPosition={mapCenter} />
+                       </MapContainer>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -331,12 +418,16 @@ const ApartmentManagement = () => {
                                 label="Nickname"
                                 multiline
                                 rows={4}
-                                name="Nickname"
-                                value={newApartment.Nickname || ''}
+                                name="nickname"
+                                value={newApartment.nickname || ''}
                                 onChange={handleChange}
                                 fullWidth
                             />
                         </Grid>
+                        <FormControl className={classes.formControl}>
+                          <InputLabel htmlFor="image-upload">Upload Images</InputLabel>
+                          <input id="image-upload" type="file" name="images" multiple onChange={handleImageSelection} />
+                        </FormControl>
                         <Grid item xs={12}>
                             <Button variant="contained" color="secondary" onClick={handleSubmit}>
                                 Submit

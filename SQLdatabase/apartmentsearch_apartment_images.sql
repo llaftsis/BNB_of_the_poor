@@ -3,6 +3,7 @@
 -- Host: localhost    Database: apartmentsearch
 -- ------------------------------------------------------
 -- Server version	8.1.0
+USE ApartmentSearch;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +30,7 @@ CREATE TABLE `apartment_images` (
   PRIMARY KEY (`id`),
   KEY `apartment_id` (`apartment_id`),
   CONSTRAINT `apartment_images_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +39,7 @@ CREATE TABLE `apartment_images` (
 
 LOCK TABLES `apartment_images` WRITE;
 /*!40000 ALTER TABLE `apartment_images` DISABLE KEYS */;
+INSERT INTO `apartment_images` VALUES (1,15,'images\\1695065160546.jpg'),(2,15,'images\\1695065383844.jpg'),(3,15,'images\\1695065383855.jpg');
 /*!40000 ALTER TABLE `apartment_images` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-18 22:24:32
+-- Dump completed on 2023-09-18 22:31:48

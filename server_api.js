@@ -8,7 +8,7 @@ const http = require('http');
 const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
-
+app.use('/images', express.static('C:/Users/laftsis/bnbftwxwn/images'));
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images/');  // 'images/' is the directory where the images will be saved. Make sure this directory exists.
@@ -23,7 +23,6 @@ const upload = multer({ storage: storage }).array('images', 10);  // Assuming ma
 // Parse JSON requests
 app.use(express.json());
 app.use(cors());
-app.use('/images', express.static('C:\Users\laftsis\bnbftwxwn\images'));
 
 // Fetch all apartments
 app.get('/api/apartments', (req, res) => {

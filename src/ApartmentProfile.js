@@ -99,7 +99,7 @@ function ApartmentProfile() {
                     <p>Nickname: {apartment.nickname}</p>
                     <h2>Apartment Images</h2>
                        {images.map((imageUrl, index) => (
-                        <img key={index} src={imageUrl} alt="Apartment" />
+                        <img key={index} src={`http://localhost:5000/${imageUrl}`} alt="Apartment" />
                         ))}
                     <h3>Owner's Username: {apartment.username}</h3>
                     {user?.id === apartment?.owner_id && <Link to={`/edit-apartment/${apartment.id}`}>Edit</Link>}

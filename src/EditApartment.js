@@ -20,7 +20,10 @@ function EditApartment() {
     const { apartmentId } = useParams();
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
-    
+    const [images, setImages] = useState([]);
+const [stagedDeletions, setStagedDeletions] = useState([]);
+const [stagedAdditions, setStagedAdditions] = useState([]);
+
     const [formData, setFormData] = useState({
         type_of_apartment: '',
         location: '',
@@ -111,16 +114,97 @@ function EditApartment() {
         };
         fetchData();
     }, [apartmentId]);
-
+    useEffect(() => {
+        const fetchApartmentImages = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/apartment-images/${apartmentId}`);
+                const data = await response.json();
+                if (data.success) {
+                    setImages(data.images);
+                }
+            } catch (error) {
+                console.error('Error fetching apartment images:', error);
+            }
+        };
+        fetchApartmentImages();
+    }, [apartmentId]);
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     };
-    
+    const handleStageDeleteImage = (imageUrl) => {
+        setStagedDeletions(prevDeletions => [...prevDeletions, imageUrl]);
+        setImages(prevImages => prevImages.filter(img => img !== imageUrl));
+    };
+
+    const handleStageUploadNewImages = (event) => {
+        const files = Array.from(event.target.files);
+        setStagedAdditions(prevAdditions => [...prevAdditions, ...files]);
+    };
+
+    const handleApplyStagedChanges = async () => {
+        for (let imageUrl of stagedDeletions) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/delete-image`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        apartmentId,
+                        imageUrl
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete image');
+                }
+            } catch (error) {
+                console.error("Error deleting image:", error);
+            }
+        }
+
+        // Handle image uploads
+        if (stagedAdditions.length > 0) {
+            const formData = new FormData();
+
+            for (let file of stagedAdditions) {
+                formData.append('images', file);
+            }
+            formData.append('apartmentId', apartmentId);
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/upload-images`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload images');
+                }
+
+                const data = await response.json();
+
+                // Check if uploadedImages exists and is an array before trying to spread it
+                if (data.uploadedImages && Array.isArray(data.uploadedImages)) {
+                    setImages(prevImages => [...prevImages, ...data.uploadedImages]);
+                } else {
+                    console.error("Unexpected structure for uploadedImages:", data.uploadedImages);
+                }
+            } catch (error) {
+                console.error("Error uploading images:", error);
+            }
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        await handleApplyStagedChanges();
+
+        // Update apartment details
         try {
             const response = await fetch(`http://localhost:5000/api/edit-apartment/${apartmentId}`, {
                 method: 'PUT',
@@ -132,16 +216,30 @@ function EditApartment() {
                     updatedData: formData
                 }),
             });
-            if (response.ok) {
-                navigate(`/apartment/${apartmentId}`);
-            } else {
-                console.error("Error updating apartment.");
+
+            if (!response.ok) {
+                throw new Error('Failed to update apartment');
             }
+            navigate(`/apartment/${apartmentId}`);
         } catch (error) {
             console.error("Error updating apartment:", error);
         }
     };
+    const handleDeleteApartment = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/apartment/${apartmentId}`, {
+                method: 'DELETE',
+            });
 
+            if (response.ok) {
+                navigate('/apartment-management');
+            } else {
+                console.error("Error deleting apartment.");
+            }
+        } catch (error) {
+            console.error("Error deleting apartment:", error);
+        }
+    };
     return (
         <form onSubmit={handleSubmit}>
             <label>
@@ -234,7 +332,19 @@ function EditApartment() {
                 Apartment Nickname:
                 <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} />
             </label>
+            <h2>Apartment Images</h2>
+            {images.map((imageUrl, index) => (
+                <div key={index}>
+                    <img src={`http://localhost:5000/${imageUrl}`} alt="Apartment" width="200" />
+                    <button type="button" onClick={() => handleStageDeleteImage(imageUrl)}>Delete</button>
+                </div>
+            ))}
+            <input type="file" multiple onChange={handleStageUploadNewImages} />
+
             <button type="submit">Save Changes</button>
+            <button type="button" onClick={handleDeleteApartment} style={{backgroundColor: 'red', color: 'white'}}>
+            Delete Apartment
+        </button>
         </form>
     );
 }

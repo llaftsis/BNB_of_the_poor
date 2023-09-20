@@ -357,6 +357,73 @@ app.get('/api/apartment-images/:apartmentId', (req, res) => {
       res.json({ success: true, images: results.map(row => row.image_url) });
   });
 });
+app.delete('/api/delete-image', async (req, res) => {
+  const { apartmentId, imageUrl } = req.body;
+
+  // First, delete the image record from the database
+  const query = 'DELETE FROM apartment_images WHERE apartment_id = ? AND image_url = ?';
+
+  connection.query(query, [apartmentId, imageUrl], (error, results) => {
+      if (error) {
+          console.error('Error deleting image record from database:', error);
+          return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      fs.unlink(`./${imageUrl}`, (err) => {
+          if (err) {
+              console.error('Error deleting physical image file:', err);
+              return res.status(500).json({ error: 'Failed to delete physical image file' });
+          }
+
+          res.json({ success: true, message: 'Image deleted successfully' });
+      });
+  });
+});
+
+app.delete('/api/apartment/:apartmentId', async (req, res) => {
+  const apartmentId = req.params.apartmentId;
+
+  // Fetch all image URLs
+  const fetchImagesQuery = 'SELECT image_url FROM apartment_images WHERE apartment_id = ?';
+
+  connection.query(fetchImagesQuery, [apartmentId], (err, results) => {
+      if (err) {
+          console.error("Error fetching associated images:", err);
+          return res.status(500).send("Internal Server Error");
+      }
+
+      const imageUrls = results.map(row => row.image_url);
+
+      // Delete images from directory
+      imageUrls.forEach(imageUrl => {
+          fs.unlink(`./${imageUrl}`, (err) => {
+              if (err) {
+                  console.error('Error deleting physical image file:', err);
+              }
+          });
+      });
+
+      // Delete image from database
+      const deleteImageRecordsQuery = 'DELETE FROM apartment_images WHERE apartment_id = ?';
+      connection.query(deleteImageRecordsQuery, [apartmentId], (err, results) => {
+          if (err) {
+              console.error("Error deleting image records:", err);
+              return res.status(500).send("Internal Server Error");
+          }
+
+          // Delete apartment
+          const deleteApartmentQuery = 'DELETE FROM apartments WHERE id = ?';
+          connection.query(deleteApartmentQuery, [apartmentId], (err, results) => {
+              if (err) {
+                  console.error("Error deleting apartment:", err);
+                  return res.status(500).send("Internal Server Error");
+              }
+              res.json({ success: true, message: 'Apartment deleted successfully.' });
+          });
+      });
+  });
+});
+
 
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);

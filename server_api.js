@@ -424,6 +424,76 @@ app.delete('/api/apartment/:apartmentId', async (req, res) => {
   });
 });
 
+app.post('/api/reserve/:apartmentId', async (req, res) => {
+  const userId = req.body.userId;
+  const apartmentId = req.params.apartmentId;
+  const start_date = req.body.start_date;
+  const end_date = req.body.end_date;
+  connection.query(
+    'SELECT COUNT(*) AS count FROM reservations WHERE apartment_id = ? AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?) OR (? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date))',
+    [apartmentId, start_date, end_date, start_date, end_date, start_date, end_date],
+    (error, overlapResults) => {
+        if (error) {
+            return res.status(500).json({ error: 'Database error: ' + error.message });
+        }
+
+        console.log("Checking for overlaps with start_date:", start_date, "and end_date:", end_date);
+        console.log("Overlap count:", overlapResults[0].count);
+
+        if (overlapResults[0].count === 0) {
+            insertReservation(apartmentId, userId, res, start_date, end_date);
+        } else {
+            res.json({ success: false, message: 'Apartment is not available for reservation.' });
+        }
+    }
+);
+  /*connection.query(
+      'SELECT COUNT(*) AS count FROM reservations WHERE apartment_id = ?',
+      [apartmentId],
+      (error, results) => {
+          if (error) {
+              return res.status(500).json({ error: 'Database error: ' + error.message });
+          }
+
+          if (results[0].count === 0) {
+              // If there are no reservations for this apartment, insert the reservation
+              insertReservation(apartmentId, userId, res, start_date, end_date);
+          } else {
+              // If there are existing reservations, check for overlaps
+              connection.query(
+                  'SELECT COUNT(*) AS count FROM reservations WHERE apartment_id = ? AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?) OR (? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date))',
+                  [apartmentId, start_date, end_date, start_date, end_date, start_date, end_date],
+                  (error, overlapResults) => {
+                      if (error) {
+                          return res.status(500).json({ error: 'Database error: ' + error.message });
+                      }
+
+                      if (overlapResults[0].count === 0) {
+                          // If there are no overlapping reservations, insert the reservation
+                          insertReservation(apartmentId, userId, res, start_date, end_date);
+                      } else {
+                          res.json({ success: false, message: 'Apartment is not available for reservation.' });
+                      }
+                  }
+              );
+          }
+      }
+  );*/
+});
+
+// Modify the insertReservation function to handle start_date and end_date
+function insertReservation(apartmentId, userId, res, start_date, end_date) {
+  connection.query(
+      'INSERT INTO reservations (apartment_id, user_id, start_date, end_date) VALUES (?, ?, ?, ?)',
+      [apartmentId, userId, start_date, end_date],
+      (error, results) => {
+          if (error) {
+              return res.status(500).json({ error: 'Database error: ' + error.message });
+          }
+          res.json({ success: true, message: 'Reservation confirmed!' });
+      }
+  );
+}
 
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);

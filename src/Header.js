@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import AuthContext from './AuthContext';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import './Header.css';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 
 function Header() {

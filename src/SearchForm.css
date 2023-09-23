@@ -1,0 +1,35 @@
+/* SearchForm.css */
+
+.search-main {
+    padding: 2rem 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+}
+
+.search-section,
+.listings-section,
+.reviews-section {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 0 auto 2rem auto; 
+    max-width: 1200px;  /* This ensures the content itself doesn't stretch too wide on large screens */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* If you want to set a max-width for the entire search-main container, you can uncomment this */
+/*
+.search-main {
+    max-width: 1400px; 
+    margin: 0 auto;
+}
+*/
+
+/* Additional styling for individual components might be needed for a consistent look */

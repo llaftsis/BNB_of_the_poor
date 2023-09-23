@@ -10,7 +10,6 @@ function RecentReviewsPage() {
 
   return (
     <div>
-      <h2>Πρόσφατες Κριτικές</h2>
       <ul>
         {reviews.map((review) => (
           <li key={review.id}>

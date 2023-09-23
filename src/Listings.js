@@ -33,9 +33,6 @@ function Listings() {
 
   return (
     <div>
-        <section>
-        <h2>Προτεινόμενοι χώροι</h2>
-      </section>
 
       
         <div className="carousel-container">

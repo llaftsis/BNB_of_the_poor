@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: apartmentsearch
+-- Host: 127.0.0.1    Database: apartmentsearch
 -- ------------------------------------------------------
--- Server version	8.1.0
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,7 +35,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','$2b$12$6FgqfMQfxGjk/mY0Ukq/2uNupNjI4OhRRXu5/DdyMGfYN3Ctlz8/K','admin@bnbftwnwn.com','Admin','Admin','0000000000',1,'Διαχειριστής'),(2,'user1','password1','user1@email.com','First1','Last1','1234567890',1,'Οικοδεσπότης'),(3,'user2','password2','user2@email.com','First2','Last2','1234567891',1,'Οικοδεσπότης'),(4,'user3','password3','user3@email.com','First3','Last3','1234567892',1,'Οικοδεσπότης'),(5,'host','$2b$10$QtdBVa.VHkcWznMnaOWbbOWZXqs.0zPsBs5FO4hv.o6jyS4UUKxoS','host@mail.com','Hoster','Hostidis','6985741236',1,'Οικοδεσπότης');
+INSERT INTO `users` VALUES (1,'admin','$2b$12$6FgqfMQfxGjk/mY0Ukq/2uNupNjI4OhRRXu5/DdyMGfYN3Ctlz8/K','admin@bnbftwnwn.com','Admin','Admin','0000000000',1,'Διαχειριστής'),(2,'user1','password1','user1@email.com','First1','Last1','1234567890',1,'Οικοδεσπότης'),(3,'user2','password2','user2@email.com','First2','Last2','1234567891',1,'Οικοδεσπότης'),(4,'user3','password3','user3@email.com','First3','Last3','1234567892',1,'Οικοδεσπότης'),(5,'host','$2b$10$QtdBVa.VHkcWznMnaOWbbOWZXqs.0zPsBs5FO4hv.o6jyS4UUKxoS','host@mail.com','Hoster','Hostidis','6985741236',1,'Οικοδεσπότης'),(6,'user4','$2b$10$JKiqv9sxKeIJyfj18pcO5.VK3pmCGfjzJdq1PtH8ShdxxzDdJHUyC','user4@gmail.com','User4','User4','1234567898',1,'Ενοικιαστής'),(7,'host5','$2b$10$dsaxguMPM7qo.4WwKjShUuT1cmCiDX1A7S0eUWUpMsoddXggTPyhe','host5@gmail.com','Host5','Host5','6986986985',1,'Οικοδεσπότης');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-16 21:12:49
+-- Dump completed on 2023-09-24 13:25:34

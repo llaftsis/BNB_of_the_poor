@@ -30,6 +30,7 @@ function App() {
         
           <div className="App">
             <Header />
+            <div className="main-content">
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<SearchForm />} />
@@ -43,6 +44,7 @@ function App() {
               <Route path="/apartment/:apartmentId" element={<ApartmentProfile />} />
               <Route path="/edit-apartment/:apartmentId" element={<EditApartment />} />
             </Routes>
+            </div>
             <Footer />
           </div>
         

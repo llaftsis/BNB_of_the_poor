@@ -34,7 +34,7 @@ CREATE TABLE `reservations` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`),
   CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-INSERT INTO `reservations` VALUES (1,13,6,NULL,'2023-08-31','2023-10-06');
+INSERT INTO `reservations` VALUES (1,13,6,NULL,'2023-08-31','2023-10-06'),(2,8,6,NULL,'2023-09-07','2023-09-15');
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-23 21:54:01
+-- Dump completed on 2023-09-24 13:25:34

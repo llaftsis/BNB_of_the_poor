@@ -4,47 +4,57 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { IconButton } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 
 function Header() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   return (
-    <AppBar position="static" color="primary" elevation={2} style={{ backgroundColor: '#3f51b5' }}>
-            <Toolbar>
-                <Typography variant="h6" style={{ flexGrow: 1, fontWeight: 500 }}>
-                    Αναζήτηση Διαμερισμάτων
-                </Typography>
+    <AppBar position="static" color="primary" elevation={8}>
+        <Toolbar>
+            <Typography variant="h6" style={{ flexGrow: 1, fontWeight: 500 }}>
+                Αναζήτηση Διαμερισμάτων
+            </Typography>
 
-                <Box mr={2}>
-                    <Button color="inherit" component={Link} to="/">Αρχική</Button>
-                </Box>
-                <Box mr={2}>
-                    <Button color="inherit" component={Link} to="/about">Σχετικά με Εμάς</Button>
-                </Box>
-                <Box mr={2}>
-                    <Button color="inherit" component={Link} to="/contact">Επικοινωνία</Button>
-                </Box>
+            <IconButton color="inherit" component={Link} to="/">
+                <HomeIcon />
+            </IconButton>
 
-                {user ? (
-                    <>
-                        <Box mr={2}>
-                            <Button color="inherit" component={Link} to={`/users/${user.id}`}>{user.username}</Button>
-                        </Box>
-                        <Box mr={2}>
-                            <Button color="inherit" component={Link} to="/apartment-management">Manage Apartments</Button>
-                        </Box>
-                        <Button variant="outlined" color="secondary" onClick={() => {
-                            logout();
-                            navigate('/');
-                        }}>Logout</Button>
-                    </>
-                ) : (
-                    <Button color="secondary" component={Link} to="/login">Σύνδεση/Εγγραφή</Button>
-                )}
-            </Toolbar>
-        </AppBar>
-  );
+            <Button className="header-button" color="inherit" component={Link} to="/about">
+                ΣΧΕΤΙΚΑ ΜΕ ΕΜΑΣ
+            </Button>
+
+            <Button className="header-button" color="inherit" component={Link} to="/contact">
+                ΕΠΙΚΟΙΝΩΝΙΑ
+            </Button>
+
+            {user ? (
+                <>
+                    <Button className="user-button" color="inherit" component={Link} to={`/users/${user.id}`}>
+                        {user.username}
+                    </Button>
+
+                    <Button className="header-button" color="inherit" component={Link} to="/apartment-management">
+                        Manage Apartments
+                    </Button>
+
+                    <Button variant="outlined" color="secondary" onClick={() => {
+                        logout();
+                        navigate('/');
+                    }}>
+                        Logout
+                    </Button>
+                </>
+            ) : (
+                <Button color="secondary" component={Link} to="/login">
+                    ΣΥΝΔΕΣΗ/ΕΓΓΡΑΦΗ
+                </Button>
+            )}
+        </Toolbar>
+    </AppBar>
+);
 }
 
 export default Header;

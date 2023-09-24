@@ -95,7 +95,7 @@ function ApartmentProfile() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                userId: user.id,
+                userId: user.username,
                 start_date: checkInDate.split('T')[0],
                 end_date: checkOutDate.split('T')[0],
             })

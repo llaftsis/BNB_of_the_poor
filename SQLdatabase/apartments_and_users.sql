@@ -48,5 +48,16 @@ CREATE TABLE apartment_images (
     FOREIGN KEY (apartment_id) REFERENCES apartments(id)
 );
 
+CREATE TABLE reservations (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    apartment_id INT,
+    username VARCHAR(255),  -- changed data type to VARCHAR
+    start_date DATE NOT NULL,   -- start date of the reservation
+    end_date DATE NOT NULL, 
+    FOREIGN KEY (apartment_id) REFERENCES apartments(id)
+    -- If users(id) is an INT, you might need another foreign key or adjust the data type of the users table
+    -- FOREIGN KEY (user_id) REFERENCES users(id) 
+);
+
 -- Admin user
 INSERT INTO Users (username, password, email, firstName, lastName, phone, role) VALUES ('admin', '$2b$12$6FgqfMQfxGjk/mY0Ukq/2uNupNjI4OhRRXu5/DdyMGfYN3Ctlz8/K', 'admin@bnbftwnwn.com', 'Admin', 'Admin', '0000000000', 'Διαχειριστής');

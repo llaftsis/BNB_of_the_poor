@@ -425,7 +425,8 @@ app.delete('/api/apartment/:apartmentId', async (req, res) => {
 });
 
 app.post('/api/reserve/:apartmentId', async (req, res) => {
-  const userId = req.body.userId;
+  debugger;
+  const username = req.body.userId;
   const apartmentId = req.params.apartmentId;
   const start_date = req.body.start_date;
   const end_date = req.body.end_date;
@@ -441,7 +442,7 @@ app.post('/api/reserve/:apartmentId', async (req, res) => {
         console.log("Overlap count:", overlapResults[0].count);
 
         if (overlapResults[0].count === 0) {
-            insertReservation(apartmentId, userId, res, start_date, end_date);
+            insertReservation(apartmentId, username, res, start_date, end_date);
         } else {
             res.json({ success: false, message: 'Apartment is not available for reservation.' });
         }
@@ -482,10 +483,10 @@ app.post('/api/reserve/:apartmentId', async (req, res) => {
 });
 
 // Modify the insertReservation function to handle start_date and end_date
-function insertReservation(apartmentId, userId, res, start_date, end_date) {
+function insertReservation(apartmentId, username, res, start_date, end_date) {
   connection.query(
-      'INSERT INTO reservations (apartment_id, user_id, start_date, end_date) VALUES (?, ?, ?, ?)',
-      [apartmentId, userId, start_date, end_date],
+      'INSERT INTO reservations (apartment_id, username, start_date, end_date) VALUES (?, ?, ?, ?)',
+      [apartmentId, username, start_date, end_date],
       (error, results) => {
           if (error) {
               return res.status(500).json({ error: 'Database error: ' + error.message });
@@ -494,6 +495,13 @@ function insertReservation(apartmentId, userId, res, start_date, end_date) {
       }
   );
 }
+
+app.get('/api/reservations/:username', async (req, res) => {
+  const userId = req.params.username;
+  const result = await db.query('SELECT * FROM reservations WHERE username = ?', [userId]);
+  res.json(result.rows);
+});
+
 
 app.listen(5000, '127.0.0.1', () => {
   console.log(`Server is running on http://127.0.0.1:5000`);

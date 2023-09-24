@@ -40,6 +40,10 @@ function Header() {
                         Manage Apartments
                     </Button>
 
+                    <Button className="header-button" color="inherit" component={Link} to="/reservations">
+                        ΚΡΑΤΗΣΕΙΣ
+                    </Button>
+
                     <Button variant="outlined" color="secondary" onClick={() => {
                         logout();
                         navigate('/');

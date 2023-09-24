@@ -19,6 +19,7 @@ import ApartmentManagement from './ApartmentManagement';
 import SearchGrid from './SearchGrid';
 import ApartmentProfile from './ApartmentProfile';  // Ensure the path is correct
 import EditApartment from './EditApartment';  // Ensure the path is correct
+import Reservations from './Reservations';
 
 function App() {
   const [showingRegistration, setShowingRegistration] = useState(false);
@@ -41,6 +42,7 @@ function App() {
               <Route path="/user-details/:id" element={<UserDetails />} />
               <Route path="/users/:id" element={<UserProfile />} />
               <Route path="/apartment-management" element={<ApartmentManagement user={user} />} />
+              <Route path="/reservations" element={<Reservations/>} />
               <Route path="/apartment/:apartmentId" element={<ApartmentProfile />} />
               <Route path="/edit-apartment/:apartmentId" element={<EditApartment />} />
             </Routes>

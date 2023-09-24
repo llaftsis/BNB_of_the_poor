@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useLocation,useParams, Link } from 'react-router-dom';
 import AuthContext from './AuthContext';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -31,12 +31,19 @@ const icon = new L.Icon({
     shadowSize: [41, 41]
 });
 
+
+
+
 function ApartmentProfile() {
     const { apartmentId } = useParams();  // Get apartment ID from the URL
     const [apartment, setApartment] = useState(null);
     const { user } = useContext(AuthContext);
     const [images, setImages] = useState([]);
     const [mainImage, setMainImage] = useState('');
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const checkInDate = searchParams.get('checkInDate');
+    const checkOutDate = searchParams.get('checkOutDate');
 
     useEffect(() => {
         // Fetch apartment details
@@ -89,8 +96,8 @@ function ApartmentProfile() {
             },
             body: JSON.stringify({
                 userId: user.id,
-                start_date: apartment.open_date.split('T')[0],
-                end_date: apartment.close_date.split('T')[0],
+                start_date: checkInDate.split('T')[0],
+                end_date: checkOutDate.split('T')[0],
             })
         });
             const data = await response.json();
@@ -211,7 +218,7 @@ function ApartmentProfile() {
                             display: "block"
                         }}
                     >
-                        Επιβεβαίωση Κράτησης
+                        ΚΡΑΤΗΣΗ
                     </Button>
                 </Box>
             ) : (

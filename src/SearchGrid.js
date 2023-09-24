@@ -7,11 +7,15 @@ function SearchGrid() {
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);  // Ensure initialized as an empty array
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const checkInDate = searchParams.get('checkInDate');
+  const checkOutDate = searchParams.get('checkOutDate');
+
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const checkInDate = searchParams.get('checkInDate');
-    const checkOutDate = searchParams.get('checkOutDate');
+    //const searchParams = new URLSearchParams(location.search);
+    //const checkInDate = searchParams.get('checkInDate');
+    //const checkOutDate = searchParams.get('checkOutDate');
     const guests = searchParams.get('guests');
     const city = searchParams.get('city');
     const category = searchParams.get('category');
@@ -90,10 +94,12 @@ function SearchGrid() {
               alt={`Image of ${apartment.type_of_apartment} in ${apartment.location}`} 
               style={styles.apartmentImage}
             />
-            <Link to={`/apartment/${apartment.id}`} style={styles.link}>
-              {apartment.type_of_apartment} in {apartment.location}
-              <div style={styles.dateText}>Open Date: {new Date(apartment.open_date).toLocaleDateString()}</div>
-            <div style={styles.dateText}>Close Date: {new Date(apartment.close_date).toLocaleDateString()}</div>
+            <Link 
+                to={`/apartment/${apartment.id}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`} 
+                style={styles.link}>
+                {apartment.type_of_apartment} in {apartment.location}
+                <div style={styles.dateText}>Open Date: {new Date(apartment.open_date).toLocaleDateString()}</div>
+                <div style={styles.dateText}>Close Date: {new Date(apartment.close_date).toLocaleDateString()}</div>
             </Link>
           </div>
         ))}

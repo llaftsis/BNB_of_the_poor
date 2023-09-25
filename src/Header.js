@@ -36,13 +36,17 @@ function Header() {
                         {user.username}
                     </Button>
 
+                    {user && user.role === 'Οικοδεσπότης' && (
                     <Button className="header-button" color="inherit" component={Link} to="/apartment-management">
-                        Manage Apartments
+                    Manage Apartments
                     </Button>
+                    )}
 
+                    {user && user.role === 'Ενοικιαστής' && (
                     <Button className="header-button" color="inherit" component={Link} to="/reservations">
                         ΚΡΑΤΗΣΕΙΣ
                     </Button>
+                    )}
 
                     <Button variant="outlined" color="secondary" onClick={() => {
                         logout();

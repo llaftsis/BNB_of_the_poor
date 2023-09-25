@@ -48,6 +48,12 @@ function Header() {
                     </Button>
                     )}
 
+                    {user && user.role === 'Διαχειριστής' && (
+                    <Button className="header-button" color="inherit" component={Link} to="/admin-dashboard">
+                        DASHBOARD
+                    </Button>
+                    )}
+
                     <Button variant="outlined" color="secondary" onClick={() => {
                         logout();
                         navigate('/');

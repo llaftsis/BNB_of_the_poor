@@ -497,10 +497,19 @@ function insertReservation(apartmentId, username, res, start_date, end_date) {
 }
 
 app.get('/api/reservations/:username', async (req, res) => {
-  const userId = req.params.username;
-  const result = await db.query('SELECT * FROM reservations WHERE username = ?', [userId]);
-  res.json(result.rows);
+  const username = req.params.username;
+  
+  const query = 'SELECT * FROM reservations WHERE username = ?';
+  
+  connection.query(query, [username], (error, results) => {
+      if (error) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.json(results);
+  });
+    
 });
+
 
 
 app.listen(5000, '127.0.0.1', () => {

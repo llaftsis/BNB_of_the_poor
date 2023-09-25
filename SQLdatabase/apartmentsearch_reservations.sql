@@ -25,16 +25,13 @@ DROP TABLE IF EXISTS `reservations`;
 CREATE TABLE `reservations` (
   `id` int NOT NULL AUTO_INCREMENT,
   `apartment_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
-  `reservation_date` date DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `apartment_id` (`apartment_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`),
-  CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +40,7 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-INSERT INTO `reservations` VALUES (1,13,6,NULL,'2023-08-31','2023-10-06'),(2,8,6,NULL,'2023-09-07','2023-09-15');
+INSERT INTO `reservations` VALUES (1,9,'user4','2023-09-08','2023-09-13'),(2,10,'user4','2023-09-08','2023-09-11'),(3,13,'user4','2023-09-08','2023-09-11'),(4,7,'user4','2023-09-08','2023-09-11');
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-24 13:25:34
+-- Dump completed on 2023-09-26  1:19:41

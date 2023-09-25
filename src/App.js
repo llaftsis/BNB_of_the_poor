@@ -42,7 +42,7 @@ function App() {
               <Route path="/user-details/:id" element={<UserDetails />} />
               <Route path="/users/:id" element={<UserProfile />} />
               <Route path="/apartment-management" element={<ApartmentManagement user={user} />} />
-              <Route path="/reservations" element={<Reservations/>} />
+              <Route path="/reservations" element={<Reservations/> } />
               <Route path="/apartment/:apartmentId" element={<ApartmentProfile />} />
               <Route path="/edit-apartment/:apartmentId" element={<EditApartment />} />
             </Routes>

@@ -94,10 +94,9 @@ function Reservations() {
                             to={`/apartment/${reservation.apartment_id}?checkInDate=${reservation.start_date}&checkOutDate=${reservation.end_date}`} 
                             style={styles.link}
                         >
-                            <h3>{reservation.listingName}</h3>  {/* Assuming reservation has listingName property */}
+                            <h3>{reservation.nickname}</h3>
                             <p style={styles.dateText}>Check-in Date: {new Date(reservation.start_date).toLocaleDateString()}</p>
                             <p style={styles.dateText}>Check-out Date: {new Date(reservation.end_date).toLocaleDateString()}</p>
-                            {/* Add other reservation details here */}
                         </Link>
                     </div>
                 ))

@@ -6,7 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import {
     Container, Typography, Grid, Paper, Box, Button,
-    CardMedia, Divider
+    CardMedia, Divider, TextareaAutosize, FormControl, 
+    InputLabel, Select, MenuItem
 } from '@material-ui/core';
 import {
     DateRange as DateRangeIcon,
@@ -44,6 +45,10 @@ function ApartmentProfile() {
     const searchParams = new URLSearchParams(location.search);
     const checkInDate = searchParams.get('checkInDate');
     const checkOutDate = searchParams.get('checkOutDate');
+    const [reviews, setReviews] = useState([]);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [userReview, setUserReview] = useState('');
+    const [userRating, setUserRating] = useState(5);
 
     useEffect(() => {
         // Fetch apartment details
@@ -110,8 +115,57 @@ function ApartmentProfile() {
             console.error('Error during reservation:', error);
         }
     };
+    const handleReviewSubmit = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    apartment_id: apartmentId,
+                    username: user.username,
+                    rating: userRating,
+                    comment: userReview
+                })
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                setReviews(prevReviews => [...prevReviews, {
+                    review_id: data.insertId, 
+                    apartment_id: apartmentId,
+                    username: user.username,
+                    rating: userRating,
+                    comment: userReview,
+                    review_date: new Date().toISOString().split('T')[0] // Current date
+                }]);
+                setUserReview('');
+                setUserRating(5);
+            } else {
+                console.error(data.error);
+            }
+        } catch (error) {
+            console.error('Error submitting the review:', error);
+        }
+    };
     
     
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/reviews/${apartmentId}`);
+                const data = await response.json();
+                console.log("Fetched reviews:", data);
+                setReviews(data);
+            } catch (error) {
+                console.error("Error fetching apartment reviews:", error);
+            }
+        };
+        fetchReviews();
+    }, [apartmentId]); // Dependency array includes id to refetch when apartment id changes
+
     const handleImageClick = (imageUrl) => {
         setMainImage(imageUrl);
     };
@@ -226,6 +280,67 @@ function ApartmentProfile() {
                     <Typography variant="h6" color="textSecondary">Loading apartment details...</Typography>
                 </Box>
             )}
+<Box mt={4}>
+    {user?.role === 'Ενοικιαστής' ? (
+        <>
+            <Button 
+                variant="contained" 
+                color="primary" 
+                onClick={() => setShowReviewForm(prevState => !prevState)}
+            >
+                Add Review
+            </Button>
+
+            {showReviewForm && (
+                <Box mt={4}>
+                    <TextareaAutosize 
+                        minRows ={4}
+                        placeholder="Write your review here"
+                        value={userReview}
+                        onChange={e => setUserReview(e.target.value)}
+                        style={{ width: '100%', marginBottom: '10px' }}
+                    />
+                    <FormControl variant="outlined" style={{ marginBottom: '10px', width: '150px' }}>
+                        <InputLabel id="rating-label">Rating</InputLabel>
+                        <Select
+                            labelId="rating-label"
+                            value={userRating}
+                            onChange={e => setUserRating(Number(e.target.value))}
+                            label="Rating"
+                        >
+                            <MenuItem value={5}>5 Stars</MenuItem>
+                            <MenuItem value={4}>4 Stars</MenuItem>
+                            <MenuItem value={3}>3 Stars</MenuItem>
+                            <MenuItem value={2}>2 Stars</MenuItem>
+                            <MenuItem value={1}>1 Star</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Button variant="contained" color="secondary" onClick={handleReviewSubmit}>
+                        Submit Review
+                    </Button>
+                </Box>
+            )}
+        </>
+    ) : (
+        <Typography variant="body1" color="error">Not allowed</Typography>
+    )}
+</Box>
+
+            {/* Displaying Reviews */}
+            <Box mt={4}>
+                <Typography variant="h6">Reviews</Typography>
+                {reviews.length === 0 ? (
+                    <Typography variant="body1">No reviews for this apartment yet.</Typography>
+                ) : (
+                    reviews.map(review => (
+                        <Box key={review.review_id} mt={2} mb={2} p={2} border={1} borderColor="grey.300" borderRadius={5}>
+                            <Typography variant="h6">{review.username} rated this {review.rating} stars</Typography>
+                            <Typography variant="body1">{review.comment}</Typography>
+                            <Typography variant="caption">Reviewed on: {new Date(review.review_date).toLocaleDateString()}</Typography>
+                        </Box>
+                    ))
+                )}
+            </Box>
         </Container>
     );
 }

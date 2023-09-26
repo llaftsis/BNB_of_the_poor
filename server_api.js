@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage }).array('images', 10);  // Assuming max 10 images
+const upload = multer({ storage: storage }).array('images', 10);  // max 10 images
 
 // Parse JSON requests
 app.use(express.json());
@@ -501,9 +501,11 @@ function insertReservation(apartmentId, username, res, start_date, end_date) {
 app.get('/api/reservations/:username', async (req, res) => {
   const username = req.params.username;
   
-  const query = 'SELECT reservations.*, ' + 
+  const query = 'SELECT reservations.*, apartments.nickname, ' + 
                 '(SELECT image_url FROM apartment_images WHERE apartment_images.apartment_id = reservations.apartment_id LIMIT 1) AS imageURL ' +
-                'FROM reservations WHERE username = ?';
+                'FROM reservations ' +
+                'JOIN apartments ON reservations.apartment_id = apartments.id ' + 
+                'WHERE reservations.username = ?';
   
   connection.query(query, [username], (error, results) => {
       if (error) {
@@ -514,6 +516,39 @@ app.get('/api/reservations/:username', async (req, res) => {
     
 });
 
+app.post('/api/reviews', async (req, res) => {
+  const { apartment_id, username, rating, comment } = req.body;
+
+  connection.query('SELECT * FROM reservations WHERE apartment_id = ? AND username = ?', [apartment_id, username], (error, results) => {
+      if (error) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      
+      if (results.length > 0) {
+          connection.query('INSERT INTO reviews (apartment_id, username, rating, comment, review_date) VALUES (?, ?, ?, ?, CURDATE())', 
+          [apartment_id, username, rating, comment], 
+          (error) => {
+              if (error) {
+                  return res.status(500).json({ error: 'Internal Server Error' });
+              }
+              res.json({ message: 'Review added successfully' });
+          });
+      } else {
+          res.status(403).json({ error: 'You cannot review an apartment you haven\'t booked.' });
+      }
+  });
+});
+
+app.get('/api/reviews/:apartment_id', (req, res) => {
+  const apartment_id = req.params.apartment_id;
+  connection.query('SELECT * FROM reviews WHERE apartment_id = ?', [apartment_id], (error, results) => {
+    console.log("Query results:", results);  // Log the results
+      if (error) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.json(results);
+  });
+});
 
 
 

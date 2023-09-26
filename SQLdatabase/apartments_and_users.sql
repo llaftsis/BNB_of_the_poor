@@ -35,12 +35,17 @@ CREATE TABLE apartments (
     nickname VARCHAR(20)
 );
 
-CREATE TABLE UserListings (
-    user_id INT,
+CREATE TABLE reviews (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
     apartment_id INT,
-    FOREIGN KEY(user_id) REFERENCES Users(id),
-    FOREIGN KEY(apartment_id) REFERENCES Apartments(id)
+    username VARCHAR(255),
+    rating INT NOT NULL,
+    comment TEXT,
+    review_date DATE,
+    FOREIGN KEY (apartment_id) REFERENCES apartments(id),
+    FOREIGN KEY (username) REFERENCES users(username)
 );
+
 CREATE TABLE apartment_images (
     id INT AUTO_INCREMENT PRIMARY KEY,
     apartment_id INT,

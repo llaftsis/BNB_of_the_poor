@@ -263,7 +263,9 @@ app.get('/api/search', async (req, res) => {
     const { checkInDate, checkOutDate, guests, city, category } = req.query;
     
     connection.query(
-        'SELECT * FROM apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests >= ? AND location = ? AND type_of_apartment = ?',
+        'SELECT apartments.*, ' +
+        '(SELECT image_url FROM apartment_images WHERE apartment_images.apartment_id = apartments.id LIMIT 1) AS first_image_url ' +
+        'FROM apartments WHERE open_date <= ? AND close_date >= ? AND number_of_guests >= ? AND location = ? AND type_of_apartment = ?',
         [checkInDate, checkOutDate, guests, city, category],
         (err, results) => {
             if (err) {
@@ -277,13 +279,13 @@ app.get('/api/search', async (req, res) => {
         }
     );
     
-
   } catch (error) {
       console.error('Error processing request:', error);
       
       res.status(500).json({ error: 'Internal Server Error' });
   }
-}); 
+});
+
 
 app.put('/api/edit-apartment/:apartmentId', async (req, res) => {
   const apartmentId = req.params.apartmentId;
@@ -499,7 +501,9 @@ function insertReservation(apartmentId, username, res, start_date, end_date) {
 app.get('/api/reservations/:username', async (req, res) => {
   const username = req.params.username;
   
-  const query = 'SELECT * FROM reservations WHERE username = ?';
+  const query = 'SELECT reservations.*, ' + 
+                '(SELECT image_url FROM apartment_images WHERE apartment_images.apartment_id = reservations.apartment_id LIMIT 1) AS imageURL ' +
+                'FROM reservations WHERE username = ?';
   
   connection.query(query, [username], (error, results) => {
       if (error) {
@@ -509,6 +513,7 @@ app.get('/api/reservations/:username', async (req, res) => {
   });
     
 });
+
 
 
 

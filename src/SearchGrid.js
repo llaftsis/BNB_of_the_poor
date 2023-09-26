@@ -88,16 +88,18 @@ function SearchGrid() {
     return (
       <div style={styles.resultsContainer}>
         {results.map(apartment => (
-          <div key={apartment.id} style={styles.listingCard}>
-            <img 
-              src={apartment.image_url} 
-              alt={`Image of ${apartment.type_of_apartment} in ${apartment.location}`} 
-              style={styles.apartmentImage}
-            />
+    <div key={apartment.id} style={styles.listingCard}>
+    {apartment.first_image_url && 
+        <img 
+            src={`http://localhost:5000/${apartment.first_image_url.replace(/\\/g, '/')}`} 
+            alt={`Image of ${apartment.type_of_apartment} in ${apartment.location}`} 
+            style={styles.apartmentImage}
+        />
+    }
             <Link 
                 to={`/apartment/${apartment.id}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`} 
                 style={styles.link}>
-                {apartment.type_of_apartment} in {apartment.location}
+                {apartment.nickname}
                 <div style={styles.dateText}>Open Date: {new Date(apartment.open_date).toLocaleDateString()}</div>
                 <div style={styles.dateText}>Close Date: {new Date(apartment.close_date).toLocaleDateString()}</div>
             </Link>

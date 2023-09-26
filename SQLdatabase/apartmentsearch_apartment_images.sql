@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: apartmentsearch
+-- Host: localhost    Database: apartmentsearch
 -- ------------------------------------------------------
--- Server version	8.0.34
+-- Server version	8.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +29,7 @@ CREATE TABLE `apartment_images` (
   PRIMARY KEY (`id`),
   KEY `apartment_id` (`apartment_id`),
   CONSTRAINT `apartment_images_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `apartment_images` (
 
 LOCK TABLES `apartment_images` WRITE;
 /*!40000 ALTER TABLE `apartment_images` DISABLE KEYS */;
-INSERT INTO `apartment_images` VALUES (1,15,'images\\1695065160546.jpg'),(2,15,'images\\1695065383844.jpg'),(3,15,'images\\1695065383855.jpg');
+INSERT INTO `apartment_images` VALUES (1,1,'images\\1695749850979.jpg'),(2,1,'images\\1695749850994.jpg'),(3,1,'images\\1695749851023.jpg'),(6,3,'images\\1695753179536.jpg');
 /*!40000 ALTER TABLE `apartment_images` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-24 13:25:35
+-- Dump completed on 2023-09-26 21:40:56

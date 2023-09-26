@@ -86,7 +86,7 @@ function Reservations() {
                 reservations.map(reservation => (
                     <div key={reservation.id} style={styles.listingCard}>
                         <img 
-                            src={reservation.imageURL}  // Assuming reservation has imageURL property
+                            src={`http://localhost:5000/${reservation.imageURL.replace(/\\/g, '/')}`} 
                             alt={reservation.listingName}
                             style={styles.apartmentImage} 
                         />

@@ -55,8 +55,6 @@ CREATE TABLE reservations (
     start_date DATE NOT NULL,   -- start date of the reservation
     end_date DATE NOT NULL, 
     FOREIGN KEY (apartment_id) REFERENCES apartments(id)
-    -- If users(id) is an INT, you might need another foreign key or adjust the data type of the users table
-    -- FOREIGN KEY (user_id) REFERENCES users(id) 
 );
 
 -- Admin user

@@ -1,6 +1,6 @@
 USE ApartmentSearch;
-
--- Drop existing tables
-DROP TABLE IF EXISTS UserListings;
-DROP TABLE IF EXISTS Apartments;
-DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS `apartments`;
+DROP TABLE IF EXISTS `Users`;
+DROP TABLE IF EXISTS `UserListings`;
+DROP TABLE IF EXISTS `apartment_images`;
+DROP TABLE IF EXISTS `reservations`;

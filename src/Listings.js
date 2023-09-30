@@ -1,55 +1,55 @@
 import './Listings.css';
-import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
+import React, { useState, useEffect, useContext } from 'react';
+import AuthContext from './AuthContext';
 
 function Listings() {
-  // Sample listings data (in a real-world application, this would probably come from an API)
-  const sampleListings = [
-    { 
-      id: 1, 
-      name: 'Cozy Apartment', 
-      location: 'New York', 
-      description: 'A comfortable apartment in the heart of the city.',
-      guests: 2,
-      bedrooms: 1,
-      beds: 1,
-      price: 150,
-      rating: 4.5,
-      image: 'https://images.trvl-media.com/lodging/32000000/31890000/31888700/31888652/893ee936.jpg?impolicy=resizecrop&rw=598&ra=fit'
-    },
-    { 
-      id: 2, 
-      name: 'Beach House', 
-      location: 'California', 
-      description: 'A beautiful beachfront property with an amazing view.',
-      guests: 5,
-      bedrooms: 3,
-      beds: 3,
-      price: 300,
-      rating: 4.7,
-      image: 'https://i0.wp.com/files.tripstodiscover.com/files/2020/07/Unique-Cave-Architecture-House.jpg?resize=784%2C588'
-    }
-  ];
+  const { user } = useContext(AuthContext);
+  const userRole = user && user.role;
+  const isApproved = user && user.isApproved;
+  
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    //if (user && userRole === 'Ενοικιαστής' && isApproved) {
+        const fetchUserReservations = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/reservations/${user.username}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user's reservations");
+                }
+                const data = await response.json();
+                console.log("Fetched data:", data);
+                setReservations(data);
+            } catch (error) {
+                console.error("Error fetching user's reservations:", error);
+            }
+            setLoading(false);
+        };
+        fetchUserReservations();
+    //} else {
+        setLoading(false);
+    //}
+  }, [user, userRole, isApproved]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-
-      
         <div className="carousel-container">
-        <div className="carousel-content">
-        {sampleListings.map(listing => (
-        <div key={listing.id} className="listing">
-          <img src={listing.image} alt={listing.name} />
-          <h2>{listing.name}</h2>
-          <p>{listing.location}</p>
-          <p>{listing.description}</p>
-          <p>{listing.guests} guests · {listing.bedrooms} bedrooms · {listing.beds} beds</p>
-          <p>${listing.price}/night</p>
-          <p>Rating: {listing.rating} ⭐</p>
+            <div className="carousel-content">
+                {reservations.map(listing => (
+                    <div key={listing.id} className="listing">
+                        <img src={`http://localhost:5000/${listing.imageURL}`} className="listing-image"/>
+                        <h2>{listing.nickname}</h2>
+                        <p>{listing.start_date}</p>
+                        <p>{listing.end_date}</p>
+                    </div>
+                ))}
+            </div>
         </div>
-      ))}
-    </div>
-    </div>
     </div>
   );
 }

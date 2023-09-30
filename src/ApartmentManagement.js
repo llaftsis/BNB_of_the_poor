@@ -11,37 +11,61 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+import { Typography, Card, CardActionArea, CardContent } from '@material-ui/core';
+
 
 
 const useStyles = makeStyles((theme) => ({
-    fab: {
-        position: 'fixed',
-        bottom: theme.spacing(2),
-        right: theme.spacing(2),
+    container: {
+        padding: theme.spacing(4),
+        margin: '0 auto',
+        maxWidth: '1200px', // Limiting max-width for larger screens
+    },
+    apartmentList: {
+        display: 'grid',
+        gridGap: theme.spacing(2),
+        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', // This creates a responsive grid layout
+    },
+    apartmentCard: {
+        transition: 'transform 0.3s ease',
+        '&:hover': {
+            transform: 'scale(1.03)' // Slight zoom effect on hover
+        }
+    },
+    apartmentContent: {
+        textAlign: 'center'
+    },
+    dialogContainer: {
+        padding: theme.spacing(2)
+    },
+    submitButton: {
+        marginTop: theme.spacing(2),
+    },
+    mapContainer: {
+        marginTop: theme.spacing(2),
+    },
+    formSection: {
+        marginBottom: theme.spacing(4),
+    },
+    formSectionTitle: {
+        marginBottom: theme.spacing(2),
     },
     formControl: {
         width: '100%',
+        marginBottom: theme.spacing(2)
     },
-    container: {
-        padding: theme.spacing(4),
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.secondary.main,
-    },
-    apartmentLink: {
-        textDecoration: 'none',
-        color: theme.palette.secondary.main,
-        marginBottom: theme.spacing(2),
-        display: 'block',
+    dialogContent: {
+        padding: theme.spacing(2),
     },
     dialogTitle: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.secondary.main,
-        padding: theme.spacing(2),
+        marginBottom: theme.spacing(2)
     },
     gridContainer: {
-        padding: theme.spacing(2),
+        marginBottom: theme.spacing(2)
     },
 }));
+
+
 
 const ApartmentManagement = () => {
         const [mapCenter, setMapCenter] = useState([37.974514992024616,23.72909545898438]);  // default center
@@ -216,225 +240,121 @@ const icon = new L.Icon({
     return (
         <ThemeProvider theme={theme}>
             <div className={classes.container}>
-                <h2>Your Apartments</h2>
+                <Typography variant="h4" component="h2" gutterBottom>
+                Your Apartments
+            </Typography>
+            <div className={classes.apartmentList}>
                 {apartments.map(apartment => (
-                   <Link key={apartment.id} to={`/apartment/${apartment.id}`} className={classes.apartmentLink}>
-                     <div className={classes.apartmentItem}>
-                       {apartment.nickname}
-                    </div>
-                   </Link>
-                 ))}
+                    <Card key={apartment.id} className={classes.apartmentCard}>
+                        <CardActionArea component={Link} to={`/apartment/${apartment.id}`}>
+                            <CardContent className={classes.apartmentContent}>
+                                <Typography variant="h6">
+                                    {apartment.nickname}
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                ))}
+            </div>
                 <Tooltip title="Add Apartment" aria-label="add">
                     <Fab color="secondary" className={classes.fab} onClick={handleOpen}>
                         <AddIcon />
                     </Fab>
                 </Tooltip>
-                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { backgroundColor: theme.palette.primary.main, color: theme.palette.secondary.main } }}>
-                    <div className={classes.dialogTitle}>
-                        <h3>Add Apartment</h3>
-                    </div>
-                    <Grid container spacing={2} className={classes.gridContainer}>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Open Date"
-                                type="date"
-                                name="open_date"
-                                value={newApartment.open_date || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Close Date"
-                                type="date"
-                                name="close_date"
-                                value={newApartment.close_date || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Minimum Price"
-                                type="number"
-                                name="min_price"
-                                value={newApartment.min_price || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Additional Cost Per Person"
-                                type="number"
-                                name="additional_cost_per_person"
-                                value={newApartment.additional_cost_per_person || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Number of Guests"
-                                type="number"
-                                name="number_of_guests"
-                                value={newApartment.number_of_guests || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>Location</InputLabel>
-                                <Select
-                                    name="location"
-                                    value={newApartment.location || ''}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value={'Athens'}>Athens</MenuItem>
-                                    <MenuItem value={'Thessaloniki'}>Thessaloniki</MenuItem>
-                                    <MenuItem value={'Crete'}>Crete</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>Type of Apartment</InputLabel>
-                                <Select
-                                    name="type_of_apartment"
-                                    value={newApartment.type_of_apartment || ''}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value={'Room'}>Room</MenuItem>
-                                    <MenuItem value={'Whole Apartment'}>Whole Apartment</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Number of Beds"
-                                type="number"
-                                name="number_of_beds"
-                                value={newApartment.number_of_beds || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Number of Bathrooms"
-                                type="number"
-                                name="number_of_bathrooms"
-                                value={newApartment.number_of_bathrooms || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Number of Rooms"
-                                type="number"
-                                name="number_of_rooms"
-                                value={newApartment.number_of_rooms || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={newApartment.living_room || false}
-                                        onChange={handleChange}
-                                        name="living_room"
-                                    />
-                                }
-                                label="Living Room"
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Square Meters"
-                                type="number"
-                                name="square_meters"
-                                value={newApartment.square_meters || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Description"
-                                multiline
-                                rows={4}
-                                name="description"
-                                value={newApartment.description || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Rules"
-                                multiline
-                                rows={4}
-                                name="rules"
-                                value={newApartment.rules || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                        <TextField
-                        label="Exact location coordinates"
-                        type="text"
-                        name="exact_location"
-                        value={newApartment.exact_location || ''}
-                        onChange={handleChange}
-                        fullWidth
-                        />
-                       <MapContainer center={mapCenter} zoom={13} style={{ height: '300px', width: '100%' }}>
-                          <TileLayer
-                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                          />
-                         <DraggableMarker initialPosition={mapCenter} />
-                       </MapContainer>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Address"
-                                multiline
-                                rows={4}
-                                name="address"
-                                value={newApartment.address || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Nickname"
-                                multiline
-                                rows={4}
-                                name="nickname"
-                                value={newApartment.nickname || ''}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
-                        <FormControl className={classes.formControl}>
-                          <InputLabel htmlFor="image-upload">Upload Images</InputLabel>
-                          <input id="image-upload" type="file" name="images" multiple onChange={handleImageSelection} />
-                        </FormControl>
-                        <Grid item xs={12}>
-                            <Button variant="contained" color="secondary" onClick={handleSubmit}>
-                                Submit
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Dialog>
+                <Dialog 
+            open={open} 
+            onClose={handleClose}
+            PaperProps={{ 
+                style: { backgroundColor: theme.palette.primary.main, color: theme.palette.secondary.main },
+                className: classes.dialogContent
+            }}>
+            <div className={classes.dialogTitle}>
+                <h3>Add Apartment</h3>
+            </div>
+            <Grid container spacing={2} className={classes.gridContainer}>
+                <Grid item xs={6}>
+                    <TextField label="Open Date" type="date" name="open_date" value={newApartment.open_date || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Close Date" type="date" name="close_date" value={newApartment.close_date || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Minimum Price" type="number" name="min_price" value={newApartment.min_price || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Additional Cost Per Person" type="number" name="additional_cost_per_person" value={newApartment.additional_cost_per_person || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Number of Guests" type="number" name="number_of_guests" value={newApartment.number_of_guests || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel>Location</InputLabel>
+                        <Select name="location" value={newApartment.location || ''} onChange={handleChange}>
+                            <MenuItem value={'Athens'}>Athens</MenuItem>
+                            <MenuItem value={'Thessaloniki'}>Thessaloniki</MenuItem>
+                            <MenuItem value={'Crete'}>Crete</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel>Type of Apartment</InputLabel>
+                        <Select name="type_of_apartment" value={newApartment.type_of_apartment || ''} onChange={handleChange}>
+                            <MenuItem value={'Room'}>Room</MenuItem>
+                            <MenuItem value={'Whole Apartment'}>Whole Apartment</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Number of Beds" type="number" name="number_of_beds" value={newApartment.number_of_beds || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Number of Bathrooms" type="number" name="number_of_bathrooms" value={newApartment.number_of_bathrooms || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Number of Rooms" type="number" name="number_of_rooms" value={newApartment.number_of_rooms || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControlLabel control={<Checkbox checked={newApartment.living_room || false} onChange={handleChange} name="living_room" />} label="Living Room" />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Square Meters" type="number" name="square_meters" value={newApartment.square_meters || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField label="Description" multiline rows={4} name="description" value={newApartment.description || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField label="Rules" multiline rows={4} name="rules" value={newApartment.rules || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField label="Exact location coordinates" type="text" name="exact_location" value={newApartment.exact_location || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                    <MapContainer center={mapCenter} zoom={13} style={{ height: '300px', width: '100%' }}>
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
+                        <DraggableMarker initialPosition={mapCenter} />
+                    </MapContainer>
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField label="Address" multiline rows={4} name="address" value={newApartment.address || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField label="Nickname" multiline rows={4} name="nickname" value={newApartment.nickname || ''} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="image-upload">Upload Images</InputLabel>
+                        <input id="image-upload" type="file" name="images" multiple onChange={handleImageSelection} />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" color="secondary" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                </Grid>
+            </Grid>
+        </Dialog>
             </div>
         </ThemeProvider>
     );

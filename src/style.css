@@ -210,3 +210,10 @@ input[type="date"]:focus {
 .registration-button:hover, .login-button:hover {
   opacity: 0.9;
 }
+
+footer {
+  margin-top: auto; /* push footer to the bottom */
+  text-align: center; /* center the text */
+  width: 100%; /* ensure it takes up full width */
+  padding: 1rem 0; /* optional padding for better appearance */
+}

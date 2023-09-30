@@ -8,7 +8,8 @@ const http = require('http');
 const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
-app.use('/images', express.static('C:/Users/laftsis/bnbftwxwn/images'));
+const imagesPath = path.join(__dirname, 'images');
+app.use('/images', express.static(imagesPath));
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images/');  // 'images/' is the directory where the images will be saved. Make sure this directory exists.

@@ -27,11 +27,9 @@
 }
 
 .listing img {
-  width: 100%;                /* Ensures image takes full width of the listing */
-  height: 150px;              /* Fixed height for image */
-  object-fit: cover;          /* Ensures images are resized correctly */
-  border-radius: 4px;         /* Optional rounded corners */
-  margin-bottom: 8px;
+  width: 250px;
+  height: 150px;
+  object-fit: cover; /* This will ensure that the image covers the entire space without distortion */
 }
 
 .listing h2 {

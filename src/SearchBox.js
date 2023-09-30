@@ -23,21 +23,26 @@ function SearchBox() {
   return (
     <div className="search-container">
         <form className="search-form" onSubmit={handleSearch}>
-        <label htmlFor="check-in-date">Check-in:</label>
-        <input type="date" id="check-in-date" name="check-in-date" required />
-
-        <label htmlFor="check-out-date">Check-out:</label>
-        <input type="date" id="check-out-date" name="check-out-date" required />
+        <div className="input-group">
+  <label htmlFor="check-in-date">Check-in:</label>
+  <input type="date" id="check-in-date" name="check-in-date" required />
+</div>
+<div className="input-group">
+  <label htmlFor="check-out-date">Check-out:</label>
+  <input type="date" id="check-out-date" name="check-out-date" required />
+</div>
 
         <label htmlFor="guests">Αριθμός ατόμων:</label>
         <input type="number" id="guests" name="guests" min="1" max="6" required />
 
-        <label htmlFor="city">Πόλη:</label>
-        <select id="city" name="city">
-          <option value="Athens">Αθήνα</option>
-          <option value="Thessaloniki">Θεσσαλονίκη</option>
-          <option value="Crete">Ηράκλειο</option>
-        </select>
+        <div className="city-container">
+    <label htmlFor="city">Πόλη:</label>
+    <select id="city" name="city">
+      <option value="Athens">Αθήνα</option>
+      <option value="Thessaloniki">Θεσσαλονίκη</option>
+      <option value="Crete">Ηράκλειο</option>
+    </select>
+</div>
 
         <fieldset>
           <legend>Κατηγορία</legend>

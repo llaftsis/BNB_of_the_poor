@@ -96,13 +96,13 @@ app.get('/api/users', (req, res) => {
 });
 
 app.get('/api/export-data', (req, res) => {
-  connection.query('SELECT * FROM apartments; SELECT * FROM Users', (error, results) => {
+  connection.query('SELECT * FROM apartments; SELECT * FROM Users;SELECT * FROM reviews;SELECT * FROM reservations', (error, results) => {
       if (error) {
-          console.error("Database Error:", error);  // <-- Log the specific error for debugging
+          console.error("Database Error:", error);
           return res.status(500).json({ error: 'Internal Server Error' });
       }
-      const [apartments, users] = results;
-      res.json({ apartments, users });
+      const [apartments, users, reviews, reservations] = results;
+      res.json({ apartments, users, reviews, reservations});
   });
 });
 

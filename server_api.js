@@ -329,13 +329,10 @@ app.post('/api/upload-images', upload, (req, res) => {
       return res.status(400).json({ error: 'No files uploaded' });
   }
 
-  const apartmentId = req.body.apartmentId;  // Assuming you're sending the apartment ID in the request body
+  const apartmentId = req.body.apartmentId;  
 
-  // Validate that apartmentId exists in your database before proceeding
+  const imagePaths = req.files.map(file => file.path);  
 
-  const imagePaths = req.files.map(file => file.path);  // Extract file paths
-
-  // Save the file paths to the database associated with the apartment
   const query = 'INSERT INTO apartment_images (apartment_id, image_url) VALUES ?';
   const values = imagePaths.map(path => [apartmentId, path]);
 
@@ -363,7 +360,6 @@ app.get('/api/apartment-images/:apartmentId', (req, res) => {
 app.delete('/api/delete-image', async (req, res) => {
   const { apartmentId, imageUrl } = req.body;
 
-  // First, delete the image record from the database
   const query = 'DELETE FROM apartment_images WHERE apartment_id = ? AND image_url = ?';
 
   connection.query(query, [apartmentId, imageUrl], (error, results) => {
@@ -451,38 +447,6 @@ app.post('/api/reserve/:apartmentId', async (req, res) => {
         }
     }
 );
-  /*connection.query(
-      'SELECT COUNT(*) AS count FROM reservations WHERE apartment_id = ?',
-      [apartmentId],
-      (error, results) => {
-          if (error) {
-              return res.status(500).json({ error: 'Database error: ' + error.message });
-          }
-
-          if (results[0].count === 0) {
-              // If there are no reservations for this apartment, insert the reservation
-              insertReservation(apartmentId, userId, res, start_date, end_date);
-          } else {
-              // If there are existing reservations, check for overlaps
-              connection.query(
-                  'SELECT COUNT(*) AS count FROM reservations WHERE apartment_id = ? AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?) OR (? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date))',
-                  [apartmentId, start_date, end_date, start_date, end_date, start_date, end_date],
-                  (error, overlapResults) => {
-                      if (error) {
-                          return res.status(500).json({ error: 'Database error: ' + error.message });
-                      }
-
-                      if (overlapResults[0].count === 0) {
-                          // If there are no overlapping reservations, insert the reservation
-                          insertReservation(apartmentId, userId, res, start_date, end_date);
-                      } else {
-                          res.json({ success: false, message: 'Apartment is not available for reservation.' });
-                      }
-                  }
-              );
-          }
-      }
-  );*/
 });
 
 // Modify the insertReservation function to handle start_date and end_date
@@ -550,6 +514,49 @@ app.get('/api/reviews/:apartment_id', (req, res) => {
       res.json(results);
   });
 });
+
+app.get('/api/apartments-with-first-image', (req, res) => {
+
+    const queryApartments = 'SELECT * FROM apartments';
+
+    connection.query(queryApartments, [], (error, apartments) => {
+        if (error) {
+            console.error('Error fetching apartments from database:', error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        const fetchFirstImageForApartment = (apartmentId) => {
+            return new Promise((resolve, reject) => {
+                const queryImage = 'SELECT image_url FROM apartment_images WHERE apartment_id = ? LIMIT 1';
+                connection.query(queryImage, [apartmentId], (imgError, results) => {
+                    if (imgError) {
+                        reject(imgError);
+                    } else {
+                        resolve(results[0] ? results[0].image_url : null);
+                    }
+                });
+            });
+        };
+
+        const fetchAllImages = async () => {
+            const apartmentsWithImage = [];
+            for (let apartment of apartments) {
+                try {
+                    const imageUrl = await fetchFirstImageForApartment(apartment.id);
+                    apartment.firstImage = imageUrl;
+                    apartmentsWithImage.push(apartment);
+                } catch (imgError) {
+                    console.error('Error fetching image for apartment:', apartment.id, imgError);
+                    return res.status(500).json({ error: 'Internal server error while fetching images' });
+                }
+            }
+            res.json({ success: true, apartments: apartmentsWithImage });
+        };
+
+        fetchAllImages();
+    });
+});
+
 
 
 

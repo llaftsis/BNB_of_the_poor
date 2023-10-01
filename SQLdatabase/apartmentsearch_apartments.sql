@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: apartmentsearch
+-- Host: 127.0.0.1    Database: apartmentsearch
 -- ------------------------------------------------------
--- Server version	8.1.0
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,7 +45,7 @@ CREATE TABLE `apartments` (
   PRIMARY KEY (`id`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `apartments_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +54,7 @@ CREATE TABLE `apartments` (
 
 LOCK TABLES `apartments` WRITE;
 /*!40000 ALTER TABLE `apartments` DISABLE KEYS */;
-INSERT INTO `apartments` VALUES (1,'2023-09-01','2023-09-30',3,'Athens','Room',2,100.00,2.00,'tstetstesttestesttsttetstrt','tstetstesttestesttsttetstrt',2,1,2,1,444.00,'37.972079227501396,23.73905181884766','Address1','Dwmatiaki'),(3,'2023-09-01','2023-09-30',3,'Athens','Room',2,100.00,5.00,'afnlkdsfdpoih fdlbfliz gxiuh \\iuhd','fdalakjd lia oia hpohdpo h\\po h\\oj',4,1,1,NULL,233.00,'37.966124796192524,23.727378845214847','Address2','Dwmatiaki2');
+INSERT INTO `apartments` VALUES (1,'2023-09-01','2023-09-30',3,'Athens','Room',2,100.00,2.00,'tstetstesttestesttsttetstrt','tstetstesttestesttsttetstrt',2,1,2,1,444.00,'37.972079227501396,23.73905181884766','Address1','Dwmatiaki'),(3,'2023-09-01','2023-09-30',3,'Athens','Room',2,100.00,5.00,'afnlkdsfdpoih fdlbfliz gxiuh \\iuhd','fdalakjd lia oia hpohdpo h\\po h\\oj',4,1,1,NULL,233.00,'37.966124796192524,23.727378845214847','Address2','Dwmatiaki2'),(4,'2023-09-01','2023-09-15',4,'Crete','Whole Apartment',7,100.00,100.00,'All accepted.','Near the sea.',2,1,2,1,50.00,'35.31512519050729,25.16971164486402','Heraklion Str 1','Sea Apartment');
 /*!40000 ALTER TABLE `apartments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -67,4 +67,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-26 23:11:57
+-- Dump completed on 2023-10-01 18:36:29

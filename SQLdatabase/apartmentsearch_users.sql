@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: apartmentsearch
+-- Host: 127.0.0.1    Database: apartmentsearch
 -- ------------------------------------------------------
--- Server version	8.1.0
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,7 +35,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','$2b$12$6FgqfMQfxGjk/mY0Ukq/2uNupNjI4OhRRXu5/DdyMGfYN3Ctlz8/K','admin@bnbftwnwn.com','Admin','Admin','0000000000',1,'Διαχειριστής'),(2,'host','$2b$10$CnrSpvb9TwOPKP2nfw3YUezJtexZkl8xcs/dk4sfvQmYOofqUR31C','host@mail.com','Host','Hostidis','6958745623',1,'Οικοδεσπότης'),(3,'rent','$2b$10$uUm2d9hCbCd2vau4XgkG7uYIlIv2k8R6J9t0hO7B4InNRcMZmgItC','rent@gmail.com','Rentis','Rentakis','6985465823',1,'Ενοικιαστής'),(5,'rent2','$2b$10$Fqn20EAbvfDBtAzZZ/ifgO2aKsiSAWm8SdiENKS5iwn4zuJg1cPdO','rent2@gmail.com','Rentis','Rentidis','6985478563',1,'Ενοικιαστής');
+INSERT INTO `users` VALUES (1,'admin','$2b$12$6FgqfMQfxGjk/mY0Ukq/2uNupNjI4OhRRXu5/DdyMGfYN3Ctlz8/K','admin@bnbftwnwn.com','Admin','Admin','0000000000',1,'Διαχειριστής'),(2,'host','$2b$10$CnrSpvb9TwOPKP2nfw3YUezJtexZkl8xcs/dk4sfvQmYOofqUR31C','host@mail.com','Host','Hostidis','6958745623',1,'Οικοδεσπότης'),(3,'rent','$2b$10$uUm2d9hCbCd2vau4XgkG7uYIlIv2k8R6J9t0hO7B4InNRcMZmgItC','rent@gmail.com','Rentis','Rentakis','6985465823',1,'Ενοικιαστής'),(5,'rent2','$2b$10$Fqn20EAbvfDBtAzZZ/ifgO2aKsiSAWm8SdiENKS5iwn4zuJg1cPdO','rent2@gmail.com','Rentis','Rentidis','6985478563',1,'Ενοικιαστής'),(6,'rent1','$2b$10$Z2G9LgDljWzGApbhCX54YeyAatjG9asZ5nXt6kSIKfT4IYtUpluNK','rent1@gmail.com','Rent1','Rent1','6981478523',1,'Ενοικιαστής'),(7,'host1','$2b$10$A6C2S1edzzkcCILeXTcuCOlZ9Sc6ojznp89xqxKYqAeRA40w7qaMq','host1@gmail.com','Host1','Host1','6911111111',1,'Οικοδεσπότης');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-26 23:11:58
+-- Dump completed on 2023-10-01 18:36:29
